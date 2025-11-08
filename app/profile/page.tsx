@@ -172,14 +172,14 @@ export default function ProfilePage() {
                   onRoleSelect={handleRoleSelect}
                   onRequirementsLoaded={setRoleRequirements}
                 />
-                {selectedRole && roleRequirements && (
+                {selectedRole && roleRequirements?.requiredSkills && (
                   <div className="mt-6 p-4 bg-purple-500/10 border border-purple-500/30 rounded-lg">
                     <h3 className="font-semibold mb-2">{selectedRole}</h3>
                     <p className="text-sm text-foreground/70 mb-3">{roleRequirements.description}</p>
                     <div>
                       <h4 className="text-sm font-semibold mb-2">Required Skills:</h4>
                       <div className="flex flex-wrap gap-2">
-                        {roleRequirements.requiredSkills.map((skill, idx) => (
+                        {roleRequirements.requiredSkills?.map((skill, idx) => (
                           <span
                             key={idx}
                             className="px-2 py-1 bg-purple-500/20 rounded text-xs"

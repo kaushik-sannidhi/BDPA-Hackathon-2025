@@ -128,7 +128,7 @@ export function SkillInput({ skills, onSkillsChange }: SkillInputProps) {
         {showSuggestions && suggestions.length > 0 && (
           <div
             ref={suggestionsRef}
-            className="absolute z-10 mt-1 w-full rounded-md border bg-popover shadow-lg"
+            className="absolute z-10 mt-1 w-full rounded-md border bg-white dark:bg-gray-800 shadow-lg"
           >
             {suggestions.map((suggestion) => (
               <button
