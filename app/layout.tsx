@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
 import { RouteLoading } from "@/components/RouteLoading";
 import { Suspense } from "react";
 
@@ -22,13 +23,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="overflow-hidden h-full dark">
-      <body className={`${inter.className} overflow-hidden h-full`}>
+    <html lang="en" className="h-full dark">
+      <body className={`${inter.className} flex flex-col min-h-screen`}>
         <Suspense fallback={null}>
           <RouteLoading />
         </Suspense>
         <Navbar />
-        <main className="h-screen overflow-auto">{children}</main>
+        <main className="flex-grow">{children}</main>
+        <Footer />
       </body>
     </html>
   );
