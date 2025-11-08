@@ -29,13 +29,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full dark">
-      <body className={`${inter.className} ${spaceGrotesk.variable} flex flex-col min-h-screen`}>
+      <body className={`${inter.className} ${spaceGrotesk.variable} flex flex-col min-h-screen overflow-x-hidden`}>
         <AuthProvider>
           <Suspense fallback={null}>
             <RouteLoading />
           </Suspense>
           <Navbar />
-          <main className="flex-1 overflow-y-auto">{children}</main>
+          <main className="flex-1 w-full">{children}</main>
         </AuthProvider>
       </body>
     </html>
