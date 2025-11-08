@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useMemo } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, BarChart, Bar, XAxis, YAxis, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, BarChart, Bar, XAxis, YAxis } from "recharts";
 import { matchSkills, categorizeSkills } from "@/lib/skills";
 import { MarketInsights } from "@/components/MarketInsights";
 import { StudyPlanGenerator } from "@/components/StudyPlanGenerator";
@@ -20,21 +20,24 @@ export function Dashboard({ userSkills, requiredSkills, roleName }: DashboardPro
     return null;
   }
 
-  const { matched, missing, matchPercentage } = matchSkills(userSkills, requiredSkills);
+  // Memoize matching computation — it's pure and potentially expensive
+  const matchResult = useMemo(() => matchSkills(userSkills, requiredSkills), [userSkills, requiredSkills]);
+  const { matched, missing, matchPercentage } = matchResult;
+
   const total = requiredSkills.length;
 
-  const chartData = [
+  const chartData = useMemo(() => [
     { name: "Matched", value: matched.length, color: COLORS[0] },
     { name: "Missing", value: missing.length, color: COLORS[1] },
-  ];
+  ], [matched.length, missing.length]);
 
-  const categorizedMissing = categorizeSkills(missing);
-  const categoryData = [
+  const categorizedMissing = useMemo(() => categorizeSkills(missing), [missing]);
+  const categoryData = useMemo(() => [
     { category: "Languages", matched: categorizedMissing.programmingLanguages.length },
     { category: "Frameworks", matched: categorizedMissing.frameworks.length },
     { category: "Tools", matched: categorizedMissing.tools.length },
     { category: "Soft Skills", matched: categorizedMissing.softSkills.length },
-  ];
+  ], [categorizedMissing]);
 
   return (
     <div className="space-y-6">
@@ -136,4 +139,3 @@ export function Dashboard({ userSkills, requiredSkills, roleName }: DashboardPro
   </div>
   );
 }
-

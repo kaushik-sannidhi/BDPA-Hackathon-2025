@@ -1,29 +1,22 @@
 "use client";
 
 import { useAuth } from "@/contexts/AuthContext";
-import { useRouter, usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
   const router = useRouter();
-  const pathname = usePathname();
-  const [shouldRedirect, setShouldRedirect] = useState(false);
 
   useEffect(() => {
-    if (!loading) {
-      if (!user) {
-        setShouldRedirect(true);
-        router.push("/login");
-      } else {
-        setShouldRedirect(false);
-      }
+    if (!loading && !user) {
+      router.replace("/login");
     }
   }, [user, loading, router]);
 
-  // Show loading only on initial load, not on navigation
-  if (loading && !user) {
+  // While loading, show a centered spinner. If not loading but no user, the effect above will redirect.
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -31,10 +24,10 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
     );
   }
 
-  if (shouldRedirect || (!loading && !user)) {
+  if (!user) {
+    // Do not render protected content while redirecting
     return null;
   }
 
   return <>{children}</>;
 }
-

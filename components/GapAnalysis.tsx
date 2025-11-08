@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -35,6 +35,12 @@ export function GapAnalysis({
     new Set()
   );
 
+  // Ref cache to avoid re-fetching and to read latest cache inside async loops
+  const resourcesRef = useRef<Record<string, LearningResource[]>>(learningResources);
+  useEffect(() => {
+    resourcesRef.current = learningResources;
+  }, [learningResources]);
+
   useEffect(() => {
     if (requiredSkills.length === 0) return;
 
@@ -48,29 +54,46 @@ export function GapAnalysis({
   }, [userSkills, requiredSkills]);
 
   useEffect(() => {
-    const fetchResources = async () => {
-      for (const skill of missingSkills) {
-        if (learningResources[skill]) continue;
+    if (missingSkills.length === 0) return;
 
-        setLoadingResources((prev) => new Set(prev).add(skill));
+    let isMounted = true;
+    const controller = new AbortController();
 
-        try {
-          const response = await fetch("/api/learning-resources", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ skill }),
+    const fetchForSkill = async (skill: string) => {
+      // Skip if already cached
+      if (resourcesRef.current && resourcesRef.current[skill]) return;
+
+      // Mark loading
+      setLoadingResources((prev) => new Set(prev).add(skill));
+
+      try {
+        const response = await fetch("/api/learning-resources", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ skill }),
+          signal: controller.signal,
+        });
+
+        if (!isMounted || controller.signal.aborted) return;
+
+        if (response.ok) {
+          const { resources } = await response.json();
+          // Update both ref and state using functional update
+          setLearningResources((prev) => {
+            const next = { ...prev, [skill]: resources || [] };
+            resourcesRef.current = next;
+            return next;
           });
-
-          if (response.ok) {
-            const { resources } = await response.json();
-            setLearningResources((prev) => ({
-              ...prev,
-              [skill]: resources || [],
-            }));
-          }
-        } catch (error) {
+        }
+      } catch (error) {
+        if ((error as any)?.name === "AbortError") {
+          // aborted
+        } else {
           console.error(`Error fetching resources for ${skill}:`, error);
-        } finally {
+        }
+      } finally {
+        // Avoid returning inside finally — only update state if still mounted
+        if (isMounted) {
           setLoadingResources((prev) => {
             const next = new Set(prev);
             next.delete(skill);
@@ -80,13 +103,22 @@ export function GapAnalysis({
       }
     };
 
-    if (missingSkills.length > 0) {
-      fetchResources();
+    // Fire off fetches for missing skills that are not cached yet.
+    for (const skill of missingSkills) {
+      if (!resourcesRef.current || !resourcesRef.current[skill]) {
+        fetchForSkill(skill);
+      }
     }
-  }, [missingSkills, learningResources]);
 
-  const categorizedMissing = categorizeSkills(missingSkills);
-  const categorizedMatched = categorizeSkills(matchedSkills);
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, [missingSkills]);
+
+  // Memoize categorizations to avoid recompute on every render
+  const categorizedMissing = useMemo(() => categorizeSkills(missingSkills), [missingSkills]);
+  const categorizedMatched = useMemo(() => categorizeSkills(matchedSkills), [matchedSkills]);
 
   const getResourceIcon = (type: string) => {
     switch (type) {
@@ -239,4 +271,3 @@ export function GapAnalysis({
     </div>
   );
 }
-

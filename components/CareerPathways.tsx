@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, TrendingUp, Clock, DollarSign, Target } from "lucide-react";
 
@@ -29,13 +28,10 @@ export function CareerPathways({
   const [pathways, setPathways] = useState<CareerPathway[]>([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (currentSkills.length > 0) {
-      fetchPathways();
-    }
-  }, [currentSkills]);
+  const lastSkillsRef = useRef<string | null>(null);
+  const abortRef = useRef<AbortController | null>(null);
 
-  const fetchPathways = async () => {
+  const fetchPathways = useCallback(async (signal?: AbortSignal) => {
     setLoading(true);
     try {
       const response = await fetch("/api/career/pathways", {
@@ -46,18 +42,53 @@ export function CareerPathways({
           interests,
           experience,
         }),
+        signal,
       });
+
+      if (signal?.aborted) return;
 
       if (response.ok) {
         const data = await response.json();
         setPathways(data.pathways || []);
       }
     } catch (error) {
-      console.error("Error fetching career pathways:", error);
+      if ((error as any)?.name === "AbortError") {
+        // aborted
+      } else {
+        console.error("Error fetching career pathways:", error);
+      }
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentSkills, interests, experience]);
+
+  useEffect(() => {
+    // Avoid refetch if skills string is identical
+    const skillsKey = JSON.stringify(currentSkills.slice().sort());
+    if (skillsKey === lastSkillsRef.current) return;
+    lastSkillsRef.current = skillsKey;
+
+    if (currentSkills.length === 0) {
+      setPathways([]);
+      return;
+    }
+
+    // Abort previous
+    if (abortRef.current) {
+      abortRef.current.abort();
+    }
+
+    const controller = new AbortController();
+    abortRef.current = controller;
+
+    // Debounce small delay to avoid frequent firing on rapid updates
+    const t = setTimeout(() => fetchPathways(controller.signal), 250);
+
+    return () => {
+      clearTimeout(t);
+      controller.abort();
+    };
+  }, [currentSkills, fetchPathways]);
 
   if (loading) {
     return (
@@ -153,4 +184,3 @@ export function CareerPathways({
     </div>
   );
 }
-
