@@ -80,7 +80,7 @@ export default function Home() {
                 typingSpeed={60}
                 startDelay={250}
                 cursorBlinkSpeed={360}
-                className="justify-center text-3xl md:text-5xl text-purple-800 dark:text-purple-100"
+                className="justify-center text-2xl md:text-3xl text-purple-800 dark:text-purple-100"
               />
             </div>
           </div>
