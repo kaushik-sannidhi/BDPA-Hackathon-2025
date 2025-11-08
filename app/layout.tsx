@@ -8,6 +8,10 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "ApplAI",
   description: "Practice your interview skills with real-time AI coaching and feedback",
+  icons: {
+    icon: "/assets/images/logo.svg",
+    apple: "/assets/images/logo.svg",
+  },
 };
 
 export default function RootLayout({

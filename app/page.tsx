@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Video, FileText, BarChart3, Sparkles } from "lucide-react";
+import { ArrowRight, Video, FileText, BarChart3 } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Home() {
@@ -18,7 +18,13 @@ export default function Home() {
           transition={{ duration: 3, repeat: Infinity }}
           className="inline-block mb-6"
         >
-          <Sparkles className="w-20 h-20 text-purple-500 mx-auto" />
+          <img 
+            src="/assets/images/logo.svg" 
+            alt="ApplAI Logo" 
+            width={120} 
+            height={120} 
+            className="mx-auto"
+          />
         </motion.div>
         <h1 className="text-6xl font-bold mb-6 bg-gradient-to-r from-ink via-purple-500 to-ink bg-clip-text text-transparent glow-text">
           ApplAI
