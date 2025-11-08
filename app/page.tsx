@@ -29,17 +29,10 @@ export default function Home() {
         <h1 className="text-6xl font-bold mb-6 bg-gradient-to-r from-ink via-purple-500 to-ink bg-clip-text text-transparent glow-text">
           ApplAI
         </h1>
-        <p className="text-xl text-foreground/80 max-w-2xl mx-auto mb-8">
+        <p className="text-xl text-foreground/80 max-w-2xl mx-auto">
           Master your interview skills with AI-powered real-time coaching. Practice makes perfect,
           and we&apos;re here to help you apply.
         </p>
-        <Link
-          href="/interview"
-          className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-purple-500 to-violet-600 text-white rounded-xl font-semibold text-lg shadow-glow-lg hover:shadow-glow-lg/80 transition-all duration-300 hover:scale-105"
-        >
-          Start Practice Session
-          <ArrowRight className="w-5 h-5" />
-        </Link>
       </motion.div>
 
       <div className="grid md:grid-cols-3 gap-8 mt-20">

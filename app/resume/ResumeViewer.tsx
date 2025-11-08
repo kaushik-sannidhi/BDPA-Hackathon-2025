@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
+import { LoadingScreen } from '@/components/LoadingScreen';
 
 // Add error boundary component
 class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean }> {
@@ -77,6 +78,7 @@ export default function ResumeViewer() {
 
   return (
     <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+      <LoadingScreen isLoading={isLoading} message="Loading your resume..." />
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">Resume Upload</h1>
@@ -105,12 +107,7 @@ export default function ResumeViewer() {
 
           <ErrorBoundary>
             <div className="border-2 border-dashed border-purple-800/30 rounded-lg p-4">
-              {isLoading ? (
-                <div className="flex flex-col items-center justify-center py-12">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mb-4"></div>
-                  <p className="text-foreground/70">Loading your resume...</p>
-                </div>
-              ) : file ? (
+              {file ? (
                 <Document
                   file={file}
                   onLoadSuccess={handleLoadSuccess}

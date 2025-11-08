@@ -7,6 +7,7 @@ import { HudGauges } from "@/components/HudGauges";
 import { QuestionQueue } from "@/components/QuestionQueue";
 import { TipsToasts } from "@/components/TipsToasts";
 import { ConsentDialog } from "@/components/ConsentDialog";
+import { LoadingScreen } from "@/components/LoadingScreen";
 import { useAppStore, type SessionMetrics } from "@/lib/store";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
@@ -65,6 +66,7 @@ export default function InterviewPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <LoadingScreen isLoading={interviewState === "prepping"} message="Preparing interview session..." />
       {!consentGiven && <ConsentDialog onAccept={handleConsentAccept} onDecline={handleConsentDecline} />}
 
       <motion.div

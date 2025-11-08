@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useAppStore, type SessionSummary } from "@/lib/store";
 import { SummaryCharts } from "@/components/SummaryCharts";
+import { LoadingScreen } from "@/components/LoadingScreen";
 import { motion } from "framer-motion";
 import { CheckCircle2, Lightbulb, Target, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -95,6 +96,7 @@ export default function ReviewPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <LoadingScreen isLoading={loading} message="Generating feedback..." />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -128,9 +130,7 @@ export default function ReviewPage() {
               AI Coaching Feedback
             </h2>
 
-            {loading ? (
-              <div className="text-center py-8 text-foreground/70">Generating feedback...</div>
-            ) : feedback ? (
+            {feedback ? (
               <div className="space-y-6">
                 <div>
                   <h3 className="text-lg font-semibold mb-3 text-foreground flex items-center gap-2">
