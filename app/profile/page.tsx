@@ -10,6 +10,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { useAuth } from "@/contexts/AuthContext";
 import { updateUserSkills, updateUserRole, updateUserResume } from "@/lib/firebase/realtime";
 import { debounce } from "@/lib/utils/debounce";
+import { normalizeSkill } from "@/lib/skills";
 import { User, Briefcase, FileText, CheckCircle2, Code, Heart, DollarSign, Scale, GraduationCap, Wrench, PenTool, TrendingUp, Users, ShieldCheck, ArrowLeft } from "lucide-react";
 
 // Career paths data (trimmed from user's provided data) with icons mapped to lucide-react components
@@ -762,7 +763,11 @@ export default function ProfilePage() {
   }, []);
 
   const handleSkillsExtracted = useCallback((skills: string[]) => {
-    setUserSkills((prev) => Array.from(new Set([...prev, ...skills])));
+    setUserSkills((prev) => {
+      const allSkills = [...prev, ...skills];
+      const normalizedSkills = allSkills.map(normalizeSkill);
+      return Array.from(new Set(normalizedSkills));
+    });
     setActiveTab("skills");
   }, []);
 
