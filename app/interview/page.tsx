@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
@@ -79,6 +79,128 @@ export default function InterviewPage() {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const recordedChunksRef = useRef<Blob[]>([]);
   const speechRecognitionRef = useRef<any>(null);
+  const lastSpokenQuestionRef = useRef<string | null>(null);
+
+  const [speechAvailable, setSpeechAvailable] = useState(false);
+  const [interviewerVoice, setInterviewerVoice] = useState<SpeechSynthesisVoice | null>(null);
+
+  const selectPreferredVoice = useCallback((voices: SpeechSynthesisVoice[]) => {
+    if (!voices.length) {
+      return null;
+    }
+
+    const preferredNames = [
+      "Microsoft Aria",
+      "Microsoft Jenny",
+      "Microsoft Guy",
+      "Microsoft Ana",
+      "Jenny",
+      "Aria",
+      "Guy",
+      "Neural",
+      "Natural",
+      "Google US English",
+      "Google UK English Female",
+      "Samantha",
+      "Alex",
+    ];
+
+    for (const name of preferredNames) {
+      const match = voices.find((voice) => voice.name.includes(name));
+      if (match) {
+        return match;
+      }
+    }
+
+    const englishVoices = voices.filter((voice) => voice.lang?.toLowerCase().startsWith("en"));
+    const neuralVoice = englishVoices.find((voice) => /neural|natural|studio|premium/i.test(voice.name));
+    if (neuralVoice) {
+      return neuralVoice;
+    }
+
+    const femaleVoice = englishVoices.find((voice) => /female|woman|girl/i.test(voice.name));
+    if (femaleVoice) {
+      return femaleVoice;
+    }
+
+    return englishVoices[0] ?? voices[0] ?? null;
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) {
+      return;
+    }
+
+    setSpeechAvailable(true);
+    const synth = window.speechSynthesis;
+
+    const updateVoice = () => {
+      const voices = synth.getVoices();
+      if (!voices.length) {
+        return;
+      }
+      const preferred = selectPreferredVoice(voices) ?? voices[0] ?? null;
+      setInterviewerVoice(preferred);
+    };
+
+    updateVoice();
+    synth.addEventListener("voiceschanged", updateVoice);
+
+    return () => {
+      synth.removeEventListener("voiceschanged", updateVoice);
+    };
+  }, [selectPreferredVoice]);
+
+  const speakQuestion = useCallback(
+    (text: string) => {
+      if (!speechAvailable || !text?.trim()) {
+        return;
+      }
+      if (typeof window === "undefined" || !("speechSynthesis" in window)) {
+        return;
+      }
+
+      const synth = window.speechSynthesis;
+      try {
+        synth.cancel();
+      } catch (err) {
+        console.warn("Unable to cancel previous speech synthesis:", err);
+      }
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      if (interviewerVoice) {
+        utterance.voice = interviewerVoice;
+      }
+      utterance.pitch = 1;
+      utterance.rate = 0.96;
+      utterance.volume = 0.92;
+      synth.speak(utterance);
+    },
+    [interviewerVoice, speechAvailable],
+  );
+
+  useEffect(() => {
+    if (!interviewerVoice) {
+      return;
+    }
+    lastSpokenQuestionRef.current = null;
+  }, [interviewerVoice]);
+
+  useEffect(() => {
+    if (!speechAvailable || !interviewStarted) {
+      return;
+    }
+    const currentQuestion = questions[currentQuestionIndex];
+    if (!currentQuestion) {
+      return;
+    }
+    if (lastSpokenQuestionRef.current === currentQuestion.id) {
+      return;
+    }
+
+    lastSpokenQuestionRef.current = currentQuestion.id;
+    speakQuestion(currentQuestion.question);
+  }, [speechAvailable, interviewStarted, currentQuestionIndex, questions, speakQuestion]);
 
   // Initialize camera and questions
   useEffect(() => {
@@ -358,6 +480,13 @@ export default function InterviewPage() {
     }
     if (speechRecognitionRef.current) {
       speechRecognitionRef.current.stop();
+    }
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      try {
+        window.speechSynthesis.cancel();
+      } catch (err) {
+        console.warn("Failed to cancel speech synthesis:", err);
+      }
     }
   };
 

@@ -1,9 +1,9 @@
 "use client";
 
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Video, FileText, BarChart3 } from "lucide-react";
 import { motion } from "framer-motion";
-import GhostCursor from "@/components/GhostCursor";
 import { Typewriter } from "@/components/Typewriter";
 
 const featureSections = [
@@ -37,6 +37,21 @@ const featureSections = [
 ];
 
 export default function Home() {
+  const [heroGlowPosition, setHeroGlowPosition] = useState<{ x: number; y: number } | null>(null);
+
+  const heroGlowStyle = useMemo(() => {
+    if (!heroGlowPosition) {
+      return { opacity: 0 };
+    }
+
+    const { x, y } = heroGlowPosition;
+    return {
+      opacity: 1,
+      background: `radial-gradient(circle at ${x}% ${y}%, rgba(129, 140, 248, 0.55), rgba(147, 51, 234, 0.35) 25%, rgba(59, 130, 246, 0.22) 45%, transparent 70%)`,
+      transition: "background 120ms ease, opacity 250ms ease",
+    } as React.CSSProperties;
+  }, [heroGlowPosition]);
+
   return (
     <div className="container mx-auto px-4 py-16">
       <motion.section
@@ -45,23 +60,17 @@ export default function Home() {
         transition={{ duration: 0.8, ease: "easeOut" }}
         className="mb-28 flex justify-center"
       >
-        <div className="relative isolate flex h-[560px] w-full max-w-6xl flex-col overflow-hidden rounded-[48px] border border-purple-200/40 bg-gradient-to-br from-white/80 via-purple-100/70 to-white/60 p-8 text-center shadow-[0_35px_90px_rgba(124,58,237,0.25)] backdrop-blur-2xl dark:border-white/10 dark:from-[#060318] dark:via-[#140c35] dark:to-[#1e1b4b] dark:shadow-[0_45px_120px_rgba(99,102,241,0.35)] md:p-16">
-          <div className="pointer-events-none absolute inset-0 opacity-70">
-            <GhostCursor
-              color="#B19EEF"
-              brightness={1}
-              edgeIntensity={0.1}
-              trailLength={60}
-              inertia={0.55}
-              grainIntensity={0.06}
-              bloomStrength={0.18}
-              bloomRadius={1.1}
-              bloomThreshold={0.03}
-              fadeDelayMs={1200}
-              fadeDurationMs={1800}
-              maxDevicePixelRatio={0.8}
-            />
-          </div>
+        <div
+          className="relative isolate flex h-[560px] w-full max-w-6xl flex-col overflow-hidden rounded-[48px] border border-purple-200/40 bg-gradient-to-br from-white/80 via-purple-100/70 to-white/60 p-8 text-center shadow-[0_35px_90px_rgba(124,58,237,0.25)] backdrop-blur-2xl transition transform-gpu dark:border-white/10 dark:from-[#060318] dark:via-[#140c35] dark:to-[#1e1b4b] dark:shadow-[0_45px_120px_rgba(99,102,241,0.35)] md:p-16"
+          onPointerMove={(event) => {
+            const rect = event.currentTarget.getBoundingClientRect();
+            const x = ((event.clientX - rect.left) / rect.width) * 100;
+            const y = ((event.clientY - rect.top) / rect.height) * 100;
+            setHeroGlowPosition({ x, y });
+          }}
+          onPointerLeave={() => setHeroGlowPosition(null)}
+        >
+          <div className="pointer-events-none absolute inset-0 transition-opacity duration-500" style={heroGlowStyle} />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,#c4b5fd1f,transparent_65%)] dark:bg-[radial-gradient(circle_at_top,#7c3aed26,transparent_65%)]" />
           <div className="relative z-10 flex h-full flex-col items-center justify-center gap-10">
             <motion.div
@@ -69,7 +78,7 @@ export default function Home() {
               transition={{ duration: 3.2, repeat: Infinity }}
               className="inline-flex h-32 w-32 items-center justify-center rounded-[28px] bg-gradient-to-br from-purple-500 via-fuchsia-500 to-purple-700 shadow-[0_30px_80px_rgba(147,51,234,0.45)]"
             >
-              <img src="/assets/images/logo.svg" alt="ApplAI Logo" className="h-20 w-20" />
+              <img src="/assets/images/logo.svg" alt="Passionfruit Logo" className="h-20 w-20" />
             </motion.div>
             <div className="space-y-6">
               <h1 className="font-heading text-6xl font-semibold tracking-tight text-purple-900 drop-shadow-[0_18px_70px_rgba(147,51,234,0.45)] dark:text-white">
