@@ -1,12 +1,11 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { ExternalLink, BookOpen, Video, FileText, Loader2 } from "lucide-react";
 import { matchSkills, categorizeSkills } from "@/lib/skills";
-import { getLearningResources } from "@/lib/gemini"; // Still uses AI for learning resources
 
 interface LearningResource {
   title: string;
@@ -19,55 +18,21 @@ interface GapAnalysisProps {
   userSkills: string[];
   requiredSkills: string[];
   roleName: string | null;
+  learningResources: Record<string, LearningResource[]>;
+  loadingResources: Set<string>;
 }
 
 export function GapAnalysis({
   userSkills,
   requiredSkills,
   roleName,
+  learningResources,
+  loadingResources,
 }: GapAnalysisProps) {
-  const [learningResources, setLearningResources] = useState<Record<string, LearningResource[]>>({});
-  const [loadingResources, setLoadingResources] = useState<Set<string>>(new Set());
-
   const { matched, missing, matchPercentage } = useMemo(
     () => matchSkills(userSkills, requiredSkills),
     [userSkills, requiredSkills]
   );
-
-  useEffect(() => {
-    if (missing.length === 0) return;
-
-    const controller = new AbortController();
-
-    const fetchForSkill = async (skill: string) => {
-      if (learningResources[skill]) return;
-
-      setLoadingResources((prev) => new Set(prev).add(skill));
-      try {
-        // This part still uses Gemini, as requested for learning resources, not matching.
-        const resources = await getLearningResources(skill);
-        setLearningResources((prev) => ({ ...prev, [skill]: resources || [] }));
-      } catch (error) {
-        if ((error as any)?.name !== "AbortError") {
-          console.error(`Error fetching resources for ${skill}:`, error);
-        }
-      } finally {
-        setLoadingResources((prev) => {
-          const next = new Set(prev);
-          next.delete(skill);
-          return next;
-        });
-      }
-    };
-
-    for (const skill of missing) {
-      fetchForSkill(skill);
-    }
-
-    return () => {
-      controller.abort();
-    };
-  }, [missing, learningResources]);
 
   const categorizedMissing = useMemo(() => categorizeSkills(missing), [missing]);
   const categorizedMatched = useMemo(() => categorizeSkills(matched), [matched]);

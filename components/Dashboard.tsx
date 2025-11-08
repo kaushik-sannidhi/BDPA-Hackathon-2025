@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, BarChart, Bar, XAxis, YAxis } from "recharts";
+import { Badge } from "@/components/ui/badge";
 import { matchSkills, categorizeSkills } from "@/lib/skills";
 import { MarketInsights } from "@/components/MarketInsights";
 
@@ -32,13 +33,14 @@ export function Dashboard({ userSkills, requiredSkills, roleName }: DashboardPro
   ], [matched.length, missing.length]);
 
   const categorizedMissing = useMemo(() => categorizeSkills(missing), [missing]);
-  
+  const categorizedMatched = useMemo(() => categorizeSkills(matched), [matched]);
+
   const categoryData = useMemo(() => [
-    { category: "Languages", matched: categorizedMissing.programmingLanguages.length },
-    { category: "Frameworks", matched: categorizedMissing.frameworks.length },
-    { category: "Tools", matched: categorizedMissing.tools.length },
-    { category: "Soft Skills", matched: categorizedMissing.softSkills.length },
-  ], [categorizedMissing]);
+    { category: "Languages", matched: categorizedMatched.programmingLanguages.length, notMatched: categorizedMissing.programmingLanguages.length },
+    { category: "Frameworks", matched: categorizedMatched.frameworks.length, notMatched: categorizedMissing.frameworks.length },
+    { category: "Tools", matched: categorizedMatched.tools.length, notMatched: categorizedMissing.tools.length },
+    { category: "Soft Skills", matched: categorizedMatched.softSkills.length, notMatched: categorizedMissing.softSkills.length },
+  ], [categorizedMatched, categorizedMissing]);
 
   return (
     <div className="space-y-6">
@@ -101,6 +103,28 @@ export function Dashboard({ userSkills, requiredSkills, roleName }: DashboardPro
             </div>
           </div>
         </div>
+        <div className="grid md:grid-cols-2 gap-6 pt-6 border-t">
+            <div>
+              <h3 className="text-lg font-semibold mb-3 text-green-500">
+                Your Matched Skills ({matched.length})
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {matched.map((skill) => (
+                  <Badge key={skill} variant="success">{skill}</Badge>
+                ))}
+              </div>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-3 text-yellow-500">
+                Missing Skills ({missing.length})
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {missing.map((skill) => (
+                  <Badge key={skill} variant="warning">{skill}</Badge>
+                ))}
+              </div>
+            </div>
+          </div>
       </CardContent>
     </Card>
 

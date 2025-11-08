@@ -3,7 +3,7 @@ import { geminiModel } from "@/lib/gemini";
 
 export async function POST(request: NextRequest) {
   try {
-    const { missingSkills, targetDate, hoursPerWeek = 10 } = await request.json();
+    const { missingSkills, resources, targetDate, hoursPerWeek = 10 } = await request.json();
 
     if (!missingSkills || missingSkills.length === 0) {
       return NextResponse.json(
@@ -12,16 +12,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const prompt = `Create a structured study plan to learn: ${missingSkills.join(", ")}
+    const prompt = `Create a structured study plan to learn: ${missingSkills.join(", ")}.
 Target date: ${targetDate || "3 months from now"}
 Available time: ${hoursPerWeek} hours/week
 
-Generate:
-- Week-by-week breakdown
-- Daily tasks
-- Milestones
-- Practice project suggestions
-- Assessment checkpoints
+Incorporate these specific learning resources into the plan:
+${JSON.stringify(resources, null, 2)}
+
+Generate a week-by-week breakdown with daily tasks that reference the provided resources. Include milestones, practice project suggestions, and assessment checkpoints.
 
 Return as JSON:
 {
@@ -29,7 +27,7 @@ Return as JSON:
     {
       "week": 1,
       "focus": "Main topic",
-      "dailyTasks": ["task1", "task2"],
+      "dailyTasks": ["task1 using resource X", "task2 using resource Y"],
       "milestone": "Milestone description",
       "projects": ["project1"],
       "assessments": ["assessment1"]

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, TrendingUp, DollarSign, MapPin, Laptop, BarChart3 } from "lucide-react";
@@ -22,18 +22,23 @@ interface MarketInsightsData {
   growthRate: string;
 }
 
+const defaultInsights: MarketInsightsData = {
+  inDemandSkills: [],
+  emergingTechnologies: [],
+  salaryRanges: { entry: "N/A", mid: "N/A", senior: "N/A" },
+  geographicDemand: "N/A",
+  remoteWorkAvailability: "N/A",
+  growthRate: "N/A",
+};
+
 export function MarketInsights({ role }: MarketInsightsProps) {
   const [insights, setInsights] = useState<MarketInsightsData | null>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (role) {
-      fetchInsights();
-    }
-  }, [role]);
-
-  const fetchInsights = async () => {
+  const fetchInsights = useCallback(async () => {
     setLoading(true);
+    setError(null);
     try {
       const response = await fetch("/api/market/insights", {
         method: "POST",
@@ -43,14 +48,30 @@ export function MarketInsights({ role }: MarketInsightsProps) {
 
       if (response.ok) {
         const data = await response.json();
-        setInsights(data);
+        // Ensure data shape
+        setInsights({ ...defaultInsights, ...data });
+      } else {
+        // Try to read body for debugging, but fall back to defaults
+        let bodyText = "";
+        try {
+          bodyText = await response.text();
+        } catch (_) {}
+        console.warn("Market insights API returned non-OK status", response.status, bodyText);
+        setError(`Could not fetch market insights (status ${response.status})`);
+        setInsights(defaultInsights);
       }
-    } catch (error) {
-      console.error("Error fetching market insights:", error);
+    } catch (err) {
+      console.error("Error fetching market insights:", err);
+      setError("Network error while fetching market insights");
+      setInsights(defaultInsights);
     } finally {
       setLoading(false);
     }
-  };
+  }, [role]);
+
+  useEffect(() => {
+    if (role) fetchInsights();
+  }, [role, fetchInsights]);
 
   if (loading) {
     return (
@@ -64,8 +85,22 @@ export function MarketInsights({ role }: MarketInsightsProps) {
     );
   }
 
+  // Always render a card to avoid layout shift; if insights is null show a helpful prompt
   if (!insights) {
-    return null;
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <BarChart3 className="h-5 w-5" />
+            Market Insights
+          </CardTitle>
+          <CardDescription>Real-time job market trends and data</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-muted-foreground">Select a role to load market insights.</p>
+        </CardContent>
+      </Card>
+    );
   }
 
   return (
@@ -79,28 +114,38 @@ export function MarketInsights({ role }: MarketInsightsProps) {
           <CardDescription>Real-time job market trends and data</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
+          {error && <p className="text-xs text-red-500">{error}</p>}
+
           <div>
             <h3 className="font-semibold mb-3 flex items-center gap-2">
               <TrendingUp className="h-4 w-4" />
               Top In-Demand Skills
             </h3>
             <div className="flex flex-wrap gap-2">
-              {(insights.inDemandSkills ?? []).map((skill, idx) => (
-                <Badge key={idx} variant="default">
-                  {skill}
-                </Badge>
-              ))}
+              {(insights.inDemandSkills ?? []).length === 0 ? (
+                <span className="text-sm text-muted-foreground">No skills available</span>
+              ) : (
+                (insights.inDemandSkills ?? []).map((skill, idx) => (
+                  <Badge key={idx} variant="default">
+                    {skill}
+                  </Badge>
+                ))
+              )}
             </div>
           </div>
 
           <div>
             <h3 className="font-semibold mb-3">Emerging Technologies</h3>
             <div className="flex flex-wrap gap-2">
-              {(insights.emergingTechnologies ?? []).map((tech, idx) => (
-                <Badge key={idx} variant="outline">
-                  {tech}
-                </Badge>
-              ))}
+              {(insights.emergingTechnologies ?? []).length === 0 ? (
+                <span className="text-sm text-muted-foreground">No technologies available</span>
+              ) : (
+                (insights.emergingTechnologies ?? []).map((tech, idx) => (
+                  <Badge key={idx} variant="outline">
+                    {tech}
+                  </Badge>
+                ))
+              )}
             </div>
           </div>
 

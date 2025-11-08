@@ -73,14 +73,10 @@ export default function DashboardPage() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="overview" className="flex items-center gap-2">
               <BarChart3 className="w-4 h-4" />
               Overview
-            </TabsTrigger>
-            <TabsTrigger value="gap" className="flex items-center gap-2">
-              <Target className="w-4 h-4" />
-              Gap Analysis
             </TabsTrigger>
             <TabsTrigger value="career" className="flex items-center gap-2">
               <TrendingUp className="w-4 h-4" />
@@ -101,30 +97,6 @@ export default function DashboardPage() {
                   <CardTitle>No Role Selected</CardTitle>
                   <CardDescription>
                     Select a target role in your profile to see detailed analysis
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button onClick={() => router.push("/profile")}>
-                    Go to Profile
-                  </Button>
-                </CardContent>
-              </Card>
-            )}
-          </TabsContent>
-
-          <TabsContent value="gap" className="space-y-6">
-            {selectedRole && roleRequirements ? (
-              <GapAnalysis
-                userSkills={userSkills}
-                requiredSkills={roleRequirements.requiredSkills}
-                roleName={selectedRole}
-              />
-            ) : (
-              <Card>
-                <CardHeader>
-                  <CardTitle>No Role Selected</CardTitle>
-                  <CardDescription>
-                    Select a target role in your profile to see gap analysis
                   </CardDescription>
                 </CardHeader>
                 <CardContent>

@@ -18,9 +18,10 @@ interface StudyPlanWeek {
 
 interface StudyPlanGeneratorProps {
   missingSkills: string[];
+  resources: Record<string, any[]>;
 }
 
-export function StudyPlanGenerator({ missingSkills }: StudyPlanGeneratorProps) {
+export function StudyPlanGenerator({ missingSkills, resources }: StudyPlanGeneratorProps) {
   const [targetDate, setTargetDate] = useState("");
   const [hoursPerWeek, setHoursPerWeek] = useState(10);
   const [plan, setPlan] = useState<{ weeks: StudyPlanWeek[]; estimatedCompletion: string } | null>(null);
@@ -36,6 +37,7 @@ export function StudyPlanGenerator({ missingSkills }: StudyPlanGeneratorProps) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           missingSkills,
+          resources,
           targetDate: targetDate || undefined,
           hoursPerWeek,
         }),

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { JobPostingAnalyzer } from "@/components/JobPostingAnalyzer";
 import { MarketInsights } from "@/components/MarketInsights";
 import { StudyPlanGenerator } from "@/components/StudyPlanGenerator";
@@ -10,7 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
-import { BookOpen, Briefcase, TrendingUp, Target } from "lucide-react";
+import { BookOpen, Briefcase, TrendingUp } from "lucide-react";
 import { matchSkills } from "@/lib/skills";
 
 export default function ResourcesPage() {
@@ -22,10 +22,50 @@ export default function ResourcesPage() {
   const selectedRole = userProfile?.selectedRole || null;
   const roleRequirements = userProfile?.roleRequirements || null;
 
-  // Calculate missing skills for study plan
-  const missingSkills = roleRequirements
-    ? matchSkills(userSkills, roleRequirements.requiredSkills).missing
-    : [];
+  const [learningResources, setLearningResources] = useState<Record<string, any[]>>({});
+  const [loadingResources, setLoadingResources] = useState<Set<string>>(new Set());
+
+  const { missing: missingSkills } = useMemo(() => roleRequirements
+    ? matchSkills(userSkills, roleRequirements.requiredSkills)
+    : { matched: [], missing: [], matchPercentage: 0 }, [userSkills, roleRequirements]);
+
+  useEffect(() => {
+    if (missingSkills.length === 0) return;
+
+    const controller = new AbortController();
+
+    const fetchForSkill = async (skill: string) => {
+      if (learningResources[skill]) return;
+
+      setLoadingResources(prev => new Set(prev).add(skill));
+      try {
+        const response = await fetch("/api/learning-resources", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ skill }),
+          signal: controller.signal,
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setLearningResources(prev => ({ ...prev, [skill]: data.resources || [] }));
+        }
+      } catch (error) {
+        if ((error as any)?.name !== 'AbortError') {
+          console.error(`Failed to fetch resources for ${skill}`, error);
+        }
+      } finally {
+        setLoadingResources(prev => {
+          const next = new Set(prev);
+          next.delete(skill);
+          return next;
+        });
+      }
+    };
+
+    missingSkills.forEach(fetchForSkill);
+
+    return () => controller.abort();
+  }, [missingSkills, learningResources]);
 
   return (
     <ProtectedRoute>
@@ -60,6 +100,8 @@ export default function ResourcesPage() {
                   userSkills={userSkills}
                   requiredSkills={roleRequirements.requiredSkills}
                   roleName={selectedRole}
+                  learningResources={learningResources}
+                  loadingResources={loadingResources}
                 />
                 {missingSkills.length > 0 && (
                   <Card>
@@ -70,7 +112,10 @@ export default function ResourcesPage() {
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <StudyPlanGenerator missingSkills={missingSkills} />
+                      <StudyPlanGenerator 
+                        missingSkills={missingSkills} 
+                        resources={learningResources}
+                      />
                     </CardContent>
                   </Card>
                 )}
@@ -126,4 +171,3 @@ export default function ResourcesPage() {
     </ProtectedRoute>
   );
 }
-
