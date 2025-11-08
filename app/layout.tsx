@@ -14,7 +14,7 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "ApplAI",
+  title: "Passionfruit",
   description: "Practice your interview skills with real-time AI coaching and feedback",
   icons: {
     icon: "/assets/images/logo.svg",

@@ -34,12 +34,12 @@ export default function LoginPage() {
           <div className="flex items-center justify-center gap-3 mb-4">
             <img 
               src="/assets/images/logo.svg" 
-              alt="ApplAI Logo" 
+              alt="Passionfruit Logo" 
               width={48} 
               height={48} 
             />
             <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-violet-500 bg-clip-text text-transparent">
-              ApplAI
+              Passionfruit
             </h1>
           </div>
           <p className="text-muted-foreground">

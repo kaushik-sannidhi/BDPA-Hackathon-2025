@@ -87,13 +87,13 @@ export function Navbar() {
           <Link href="/" className="flex items-center gap-2 group">
             <img 
               src="/assets/images/logo.svg" 
-              alt="ApplAI Logo" 
+              alt="Passionfruit Logo" 
               width={32} 
               height={32} 
               className="group-hover:animate-spin transition-transform"
             />
             <span className="text-xl font-bold bg-gradient-to-r from-purple-400 to-violet-500 bg-clip-text text-transparent glow-text">
-              ApplAI
+              Passionfruit
             </span>
           </Link>
 

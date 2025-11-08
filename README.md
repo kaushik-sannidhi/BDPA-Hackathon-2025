@@ -1,4 +1,4 @@
-# ApplAI - AI-Powered Interview Coach 🤖🎤
+# Passionfruit - AI-Powered Interview Coach 🤖🎤
 
 A cutting-edge Next.js 15 application that helps you ace your interviews with AI-powered practice sessions, real-time feedback, and performance analytics.
 
