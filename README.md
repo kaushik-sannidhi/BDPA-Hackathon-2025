@@ -55,7 +55,7 @@ npm install
 3. (Optional) Set up OpenAI API key for enhanced AI feedback:
 ```bash
 # Create .env.local file
-echo "OPENAI_API_KEY=your_api_key_here" > .env.local
+echo "OPENAI_API_KEY=sk-27713c6a939f42189c4cdb222a390bd1" > .env.local
 ```
 *Note: The app works without an API key using mock responses*
 
