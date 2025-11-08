@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Video, FileText, BarChart3 } from "lucide-react";
 import { motion } from "framer-motion";
@@ -37,20 +37,71 @@ const featureSections = [
 ];
 
 export default function Home() {
-  const [heroGlowPosition, setHeroGlowPosition] = useState<{ x: number; y: number } | null>(null);
+  const heroGlowTargetRef = useRef<{ x: number; y: number } | null>(null);
+  const heroGlowRenderRef = useRef<{ x: number; y: number } | null>(null);
+  const animationFrameRef = useRef<number | null>(null);
+  const [heroGlowRender, setHeroGlowRender] = useState<{ x: number; y: number } | null>(null);
+
+  const animateHeroGlow = useCallback(() => {
+    const target = heroGlowTargetRef.current;
+    let current = heroGlowRenderRef.current;
+
+    if (!target) {
+      heroGlowRenderRef.current = null;
+      setHeroGlowRender(null);
+      animationFrameRef.current = null;
+      return;
+    }
+
+    if (!current) {
+      current = { ...target };
+    } else {
+      const easing = 0.12;
+      current = {
+        x: current.x + (target.x - current.x) * easing,
+        y: current.y + (target.y - current.y) * easing,
+      };
+    }
+
+    heroGlowRenderRef.current = current;
+    setHeroGlowRender(current);
+
+    const distance = Math.hypot(target.x - current.x, target.y - current.y);
+    if (distance > 0.2) {
+      animationFrameRef.current = requestAnimationFrame(animateHeroGlow);
+    } else {
+      heroGlowRenderRef.current = { ...target };
+      setHeroGlowRender({ ...target });
+      animationFrameRef.current = null;
+    }
+  }, []);
+
+  const scheduleHeroGlow = useCallback(() => {
+    if (animationFrameRef.current === null) {
+      animationFrameRef.current = requestAnimationFrame(animateHeroGlow);
+    }
+  }, [animateHeroGlow]);
 
   const heroGlowStyle = useMemo(() => {
-    if (!heroGlowPosition) {
+    if (!heroGlowRender) {
       return { opacity: 0 };
     }
 
-    const { x, y } = heroGlowPosition;
+    const { x, y } = heroGlowRender;
     return {
       opacity: 1,
       background: `radial-gradient(circle at ${x}% ${y}%, rgba(129, 140, 248, 0.55), rgba(147, 51, 234, 0.35) 25%, rgba(59, 130, 246, 0.22) 45%, transparent 70%)`,
-      transition: "background 120ms ease, opacity 250ms ease",
+      transition: "opacity 320ms ease",
     } as React.CSSProperties;
-  }, [heroGlowPosition]);
+  }, [heroGlowRender]);
+
+  useEffect(() => {
+    return () => {
+      if (animationFrameRef.current !== null) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="container mx-auto px-4 py-16">
@@ -64,11 +115,21 @@ export default function Home() {
           className="relative isolate flex h-[560px] w-full max-w-6xl flex-col overflow-hidden rounded-[48px] border border-purple-200/40 bg-gradient-to-br from-white/80 via-purple-100/70 to-white/60 p-8 text-center shadow-[0_35px_90px_rgba(124,58,237,0.25)] backdrop-blur-2xl transition transform-gpu dark:border-white/10 dark:from-[#060318] dark:via-[#140c35] dark:to-[#1e1b4b] dark:shadow-[0_45px_120px_rgba(99,102,241,0.35)] md:p-16"
           onPointerMove={(event) => {
             const rect = event.currentTarget.getBoundingClientRect();
-            const x = ((event.clientX - rect.left) / rect.width) * 100;
-            const y = ((event.clientY - rect.top) / rect.height) * 100;
-            setHeroGlowPosition({ x, y });
+            heroGlowTargetRef.current = {
+              x: ((event.clientX - rect.left) / rect.width) * 100,
+              y: ((event.clientY - rect.top) / rect.height) * 100,
+            };
+            scheduleHeroGlow();
           }}
-          onPointerLeave={() => setHeroGlowPosition(null)}
+          onPointerLeave={() => {
+            heroGlowTargetRef.current = null;
+            heroGlowRenderRef.current = null;
+            setHeroGlowRender(null);
+            if (animationFrameRef.current !== null) {
+              cancelAnimationFrame(animationFrameRef.current);
+              animationFrameRef.current = null;
+            }
+          }}
         >
           <div className="pointer-events-none absolute inset-0 transition-opacity duration-500" style={heroGlowStyle} />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,#c4b5fd1f,transparent_65%)] dark:bg-[radial-gradient(circle_at_top,#7c3aed26,transparent_65%)]" />
