@@ -1,6 +1,6 @@
 import { initializeApp, getApps, FirebaseApp } from "firebase/app";
 import { getAuth, Auth } from "firebase/auth";
-import { getFirestore, Firestore } from "firebase/firestore";
+import { getDatabase, Database } from "firebase/database";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD8DuLKbtPgwhmWZAvmndcMBdHUoJy6gZw",
@@ -16,12 +16,12 @@ const firebaseConfig = {
 // Initialize Firebase
 let app: FirebaseApp | undefined;
 let auth: Auth | undefined;
-let db: Firestore | undefined;
+let db: Database | undefined;
 
 if (typeof window !== "undefined") {
   app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
   auth = getAuth(app);
-  db = getFirestore(app);
+  db = getDatabase(app);
 }
 
 // Export with fallbacks for SSR safety

@@ -39,9 +39,9 @@ export default function Home() {
         {[
           {
             icon: FileText,
-            title: "Upload Resume",
-            description: "Extract skills and keywords to personalize your practice questions",
-            href: "/resume",
+            title: "Your Profile",
+            description: "Manage your skills, target role, and resume to personalize your experience",
+            href: "/profile",
             color: "from-purple-500 to-violet-600",
           },
           {
@@ -53,9 +53,9 @@ export default function Home() {
           },
           {
             icon: BarChart3,
-            title: "Review Sessions",
-            description: "Analyze your performance with detailed metrics and AI insights",
-            href: "/review",
+            title: "Dashboard",
+            description: "View your skill analysis, gap analysis, and career pathways",
+            href: "/dashboard",
             color: "from-purple-600 to-violet-700",
           },
         ].map((feature, idx) => (

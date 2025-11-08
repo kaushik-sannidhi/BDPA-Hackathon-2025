@@ -70,10 +70,10 @@ npm run dev
 
 ### 60-Second Demo Script
 
-1. **Upload Resume** (10s)
-   - Navigate to `/resume`
-   - Select your role (e.g., "Frontend")
-   - Paste your resume text or upload a .txt file
+1. **Set Up Profile** (10s)
+   - Navigate to `/profile`
+   - Upload your resume or add skills manually
+   - Select your target role (e.g., "Frontend Developer")
    - Review extracted skills
 
 2. **Start Interview** (30s)
