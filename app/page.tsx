@@ -73,10 +73,10 @@ export default function Home() {
             </motion.div>
             <div className="space-y-6">
               <h1 className="font-heading text-6xl font-semibold tracking-tight text-purple-900 drop-shadow-[0_18px_70px_rgba(147,51,234,0.45)] dark:text-white">
-                ApplAI
+                Passionfruit
               </h1>
               <Typewriter
-                text="Assess. Adapt. Ace."
+                text="Pursue your passions and bear the fruit of your success!"
                 typingSpeed={60}
                 startDelay={250}
                 cursorBlinkSpeed={360}
