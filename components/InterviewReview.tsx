@@ -7,8 +7,9 @@ import { LoadingScreen } from "@/components/LoadingScreen";
 import { motion } from "framer-motion";
 import { CheckCircle2, Lightbulb, Target, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Button } from "./ui/button";
 
-export default function ReviewPage() {
+export function InterviewReview() {
   const router = useRouter();
   const { sessions, loadSessions, deleteAllSessions, currentSession } = useAppStore();
   const [selectedSession, setSelectedSession] = useState<SessionSummary | null>(null);
@@ -25,7 +26,7 @@ export default function ReviewPage() {
       setSelectedSession(currentSession);
       fetchFeedback(currentSession);
     } else if (sessions.length > 0) {
-      const latest = sessions[sessions.length - 1];
+      const latest = sessions.sort((a, b) => b.startTime - a.startTime)[0];
       setSelectedSession(latest);
       fetchFeedback(latest);
     }
@@ -71,7 +72,7 @@ export default function ReviewPage() {
     }
   };
 
-  if (sessions.length === 0 && !currentSession) {
+  if (sessions.length === 0) {
     return (
       <div className="container mx-auto px-4 py-16 text-center">
         <motion.div
@@ -81,21 +82,21 @@ export default function ReviewPage() {
         >
           <h2 className="text-2xl font-bold mb-4 text-foreground">No Sessions Yet</h2>
           <p className="text-foreground/70 mb-6">Complete an interview practice session to see your review here.</p>
-          <button
+          <Button
             onClick={() => router.push("/interview")}
             className="px-6 py-3 bg-gradient-to-r from-purple-500 to-violet-600 text-white rounded-lg font-semibold shadow-glow hover:shadow-glow-lg transition-all duration-300"
           >
             Start Practice Session
-          </button>
+          </Button>
         </motion.div>
       </div>
     );
   }
 
-  const sessionToShow = selectedSession || currentSession || sessions[sessions.length - 1];
+  const sessionToShow = selectedSession || sessions.sort((a, b) => b.startTime - a.startTime)[0];
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <>
       <LoadingScreen isLoading={loading} message="Generating feedback..." />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -184,7 +185,7 @@ export default function ReviewPage() {
         >
           <h3 className="text-lg font-bold mb-4 text-foreground">Previous Sessions</h3>
           <div className="space-y-2">
-            {sessions.slice(0, 5).map((session) => (
+            {sessions.sort((a, b) => b.startTime - a.startTime).slice(0, 5).map((session) => (
               <button
                 key={session.id}
                 onClick={() => {
@@ -213,7 +214,6 @@ export default function ReviewPage() {
           </div>
         </motion.div>
       )}
-    </div>
+    </>
   );
 }
-
