@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 20% 95%;
+    --foreground: 240 10% 3.9%;
+    --primary: 195 100% 70%;
+    --primary-foreground: 240 10% 3.9%;
+    --secondary: 195 50% 85%;
+    --secondary-foreground: 240 10% 3.9%;
+    --accent: 195 80% 75%;
+    --accent-foreground: 240 10% 3.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-sky-200;
+  }
+  body {
+    @apply bg-gradient-to-br from-sky-50 via-blue-50 to-cyan-50 text-ink min-h-screen;
+    background-attachment: fixed;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .glow-text {
+    text-shadow: 0 0 10px rgba(135, 206, 235, 0.5),
+                 0 0 20px rgba(135, 206, 235, 0.3);
+  }
+  
+  .glass-effect {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(135, 206, 235, 0.3);
+  }
+}
+
