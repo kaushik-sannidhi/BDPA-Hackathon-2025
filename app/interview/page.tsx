@@ -417,8 +417,11 @@ export default function InterviewPage() {
                         <div className="relative bg-black aspect-video">
                           <video
                               ref={videoRef}
-                              className="w-full h-full object-cover"
+                              className="w-full h-auto rounded-lg shadow-lg"
+                              autoPlay
                               playsInline
+                              muted
+                              style={{ transform: 'scaleX(-1)' }}
                           />
                           {!videoEnabled && (
                               <div className="absolute inset-0 flex items-center justify-center bg-gray-900">
