@@ -143,46 +143,48 @@ export function GapAnalysis({
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {missing.map((skill) => (
-                <div key={skill} className="border rounded-lg p-4">
-                  <h4 className="font-semibold mb-3">{skill}</h4>
-                  {loadingResources.has(skill) ? (
-                    <div className="flex items-center text-sm text-muted-foreground">
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Loading resources...
-                    </div>
-                  ) : learningResources[skill]?.length > 0 ? (
-                    <div className="space-y-2">
-                      {learningResources[skill].map((resource, idx) => (
-                        <a
-                          key={idx}
-                          href={resource.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-2 p-2 rounded hover:bg-accent transition-colors"
-                        >
-                          {getResourceIcon(resource.type)}
-                          <div className="flex-1">
-                            <p className="text-sm font-medium">
-                              {resource.title}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              {resource.platform} • {resource.type}
-                            </p>
-                          </div>
-                          <ExternalLink className="h-4 w-4 text-muted-foreground" />
-                        </a>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-sm text-muted-foreground">
-                      No resources found
-                    </p>
-                  )}
-                </div>
-              ))}
-            </div>
+            {loadingResources.size > 0 ? (
+              <div className="flex flex-col items-center justify-center py-8">
+                <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
+                <p className="text-muted-foreground">Loading learning resources...</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {missing.map((skill) => (
+                  <div key={skill} className="border rounded-lg p-4">
+                    <h4 className="font-semibold mb-3">{skill}</h4>
+                    {learningResources[skill]?.length > 0 ? (
+                      <div className="space-y-2">
+                        {learningResources[skill].map((resource, idx) => (
+                          <a
+                            key={idx}
+                            href={resource.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 p-2 rounded hover:bg-accent transition-colors"
+                          >
+                            {getResourceIcon(resource.type)}
+                            <div className="flex-1">
+                              <p className="text-sm font-medium">
+                                {resource.title}
+                              </p>
+                              <p className="text-xs text-muted-foreground">
+                                {resource.platform} • {resource.type}
+                              </p>
+                            </div>
+                            <ExternalLink className="h-4 w-4 text-muted-foreground" />
+                          </a>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-sm text-muted-foreground">
+                        No resources found
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
       )}

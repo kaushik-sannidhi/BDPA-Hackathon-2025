@@ -12,8 +12,18 @@ export async function searchYouTubeVideos(
   duration: string;
 }[]> {
   if (!YOUTUBE_API_KEY) {
-    console.warn("YOUTUBE_API_KEY not set, skipping YouTube search");
-    return [];
+    console.warn("YOUTUBE_API_KEY not set, providing Google search fallback.");
+    const googleSearchQuery = encodeURIComponent(`${query} video tutorial`);
+    return [
+      {
+        title: `Search for "${query}" video tutorials on Google`,
+        url: `https://www.google.com/search?q=${googleSearchQuery}`,
+        platform: "Google Search",
+        type: "Video",
+        description: `A Google search for video tutorials on ${query}.`,
+        duration: "N/A",
+      },
+    ];
   }
 
   try {

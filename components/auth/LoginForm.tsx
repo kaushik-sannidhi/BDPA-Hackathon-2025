@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,6 +18,7 @@ export function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,6 +38,7 @@ export function LoginForm() {
         } else if (user) {
           await createUserProfile(user, { displayName });
           setMessage("Account created successfully! Redirecting...");
+          router.push('/profile');
         }
       } else {
         const { error: loginError } = await loginWithEmail(email, password);
@@ -43,6 +46,7 @@ export function LoginForm() {
           setError(loginError);
         } else {
           setMessage("Login successful! Redirecting...");
+          router.push('/profile');
         }
       }
     } catch (err: any) {
