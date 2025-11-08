@@ -1,4 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { getOrSet } from "@/lib/cache";
+import { createHash } from "crypto";
 
 // Read keys from a new `GEMINI_API_KEYS` (plural) or fall back to the single key
 const API_KEYS = (process.env.GEMINI_API_KEYS || process.env.GEMINI_API_KEY || "")
@@ -10,11 +12,16 @@ if (API_KEYS.length === 0) {
   console.warn("GEMINI_API_KEY or GEMINI_API_KEYS is not set in environment variables. Gemini features will fail.");
 }
 
+const MODEL_NAME = "gemini-2.5-flash"; // centralized model name
+const CACHE_TTL_SECONDS = Number(process.env.GEMINI_CACHE_TTL_SECONDS ?? 1800);
+
+function sha256(input: string) {
+  return createHash("sha256").update(input).digest("hex");
+}
+
 /**
- * A robust function that attempts to generate content using a list of API keys,
- * failing over to the next key if the previous one fails.
- * @param prompt The prompt to send to the generative model.
- * @returns The result from the generative model.
+ * Generate content with API key failover and caching on the prompt text.
+ * We cache the final text output and wrap it to match the SDK's response shape.
  */
 async function generateContentWithFailover(prompt: string) {
   if (API_KEYS.length === 0) {
@@ -27,31 +34,45 @@ async function generateContentWithFailover(prompt: string) {
     };
   }
 
-  let lastError: any = null;
+  const cacheKey = `gemini:${MODEL_NAME}:${sha256(prompt)}`;
 
-  for (const key of API_KEYS) {
-    try {
-      const genAI = new GoogleGenerativeAI(key);
-      const model = genAI.getGenerativeModel({
-        model: "gemini-2.5-flash", // Using the 'flash' model as requested
-      });
-      
-      const result = await model.generateContent(prompt);
-      // If successful, return immediately
-      return result; 
-    } catch (error) {
-      lastError = error;
-      console.warn(`Gemini API key ending in '...${key.slice(-4)}' failed. Trying next key.`);
+  const text = await getOrSet<string>(cacheKey, async () => {
+    let lastError: any = null;
+
+    for (const key of API_KEYS) {
+      try {
+        const genAI = new GoogleGenerativeAI(key);
+        const model = genAI.getGenerativeModel({ model: MODEL_NAME });
+        const result = await model.generateContent(prompt);
+        const res: any = await (result as any).response;
+        if (res && typeof res.text === "function") {
+          const maybeText = res.text();
+          const out = maybeText instanceof Promise ? await maybeText : String(maybeText);
+          return out;
+        }
+        // Fallback: try to stringify response
+        return JSON.stringify(res ?? {});
+      } catch (error) {
+        lastError = error;
+        if (typeof key === "string" && key.length >= 4) {
+          console.warn(`Gemini API key ending in '...${key.slice(-4)}' failed. Trying next key.`);
+        } else {
+          console.warn("Gemini API key failed. Trying next key.");
+        }
+      }
     }
-  }
 
-  // If all keys failed, log the final error and re-throw it
-  console.error("All Gemini API keys failed. Last error:", lastError);
-  throw lastError;
+    console.error("All Gemini API keys failed. Last error:", lastError);
+    throw lastError;
+  }, CACHE_TTL_SECONDS);
+
+  // Wrap cached text into SDK-like response
+  return {
+    response: { text: () => text },
+  } as any;
 }
 
 // Export a model object that's compatible with the rest of the app.
-// Its `generateContent` method is now our robust failover function.
 export const geminiModel = {
   generateContent: generateContentWithFailover,
 };

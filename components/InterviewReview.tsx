@@ -43,7 +43,7 @@ export function InterviewReview() {
     if (answeredQuestions.length === 0) {
       return { averageScore: 0, totalQuestions: 0, roles: [] };
     }
-    const totalScore = answeredQuestions.reduce((sum, ans) => sum + ans.feedback.score, 0);
+    const totalScore = answeredQuestions.reduce((sum, ans) => sum + ans.feedback.overallScore, 0);
     const roles = [...new Set(answeredQuestions.map(a => a.role))];
     return {
       averageScore: totalScore / answeredQuestions.length,
@@ -163,6 +163,18 @@ export function InterviewReview() {
                         <div className="p-4 bg-background/50 rounded-lg">
                             <h4 className="font-semibold mb-2">Your Transcript</h4>
                             <p className="text-sm text-muted-foreground italic">"{selectedAnswer.transcript}"</p>
+                        </div>
+
+                        <div className="space-y-3">
+                            <h4 className="font-semibold mb-2">Rubric Scores</h4>
+                            <div className="grid grid-cols-2 gap-2 text-sm">
+                                {selectedAnswer.feedback.rubricScores && Object.entries(selectedAnswer.feedback.rubricScores).map(([criterion, score]) => (
+                                    <div key={criterion} className="flex justify-between">
+                                        <span className="capitalize">{criterion.replace(/([A-Z])/g, ' $1')}</span>
+                                        <span className="font-bold">{score}/5</span>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
 
                         <div className="space-y-3">

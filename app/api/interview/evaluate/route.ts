@@ -14,19 +14,36 @@ export async function POST(request: NextRequest) {
     // Build a prompt to evaluate the candidate's answer
     const prompt = `You are an expert interview coach providing a detailed evaluation of a candidate's answer.
 
-Question: ${question}
+**Question:**
+${question}
 
-Candidate's Answer (Transcript):
+**Candidate's Answer (Transcript):**
 ${transcript}
 
 **Your Task:**
 Provide a comprehensive, in-depth analysis of the candidate's response. Be critical but constructive. Do not provide a minimal response; be thorough and detailed. Your feedback is crucial for the candidate's improvement.
 
+Evaluate the candidate's answer based on the following rubric criteria, providing a score out of 5 for each, and an overall score out of 10.
+
+**Rubric Criteria:**
+-   **Clarity & Conciseness:** How well was the answer articulated? Was it easy to understand and to the point? (Score 1-5)
+-   **Relevance:** Did the answer directly address the question asked? (Score 1-5)
+-   **Depth & Detail:** Was the answer comprehensive enough? Did it provide sufficient examples, explanations, or technical depth? (Score 1-5)
+-   **Technical Accuracy (if applicable):** Was any technical information provided correct and precise? (Score 1-5)
+-   **Problem-Solving Approach (if applicable):** Did the candidate demonstrate a logical and effective approach to problem-solving? (Score 1-5)
+
 **Output Format (JSON only):**
 Return a single JSON object with the following structure. Do not include any other text or markdown.
 
 {
-  "score": number (a score from 0 to 100, where 100 is a perfect, textbook answer),
+  "overallScore": number (a score from 0 to 10, where 10 is a perfect, textbook answer),
+  "rubricScores": {
+    "clarityConciseness": number (1-5),
+    "relevance": number (1-5),
+    "depthDetail": number (1-5),
+    "technicalAccuracy": number (1-5),
+    "problemSolvingApproach": number (1-5)
+  },
   "strengths": [
     "string (A specific point about what the candidate did well. Be descriptive.)"
   ],
@@ -34,7 +51,7 @@ Return a single JSON object with the following structure. Do not include any oth
     "string (A specific, constructive critique of what the candidate did wrong or missed. e.g., 'The explanation of technical trade-offs was superficial.')"
   ],
   "suggestions": [
-    "string (A detailed, actionable suggestion for improvement. Give a concrete example. e.g., 'To improve, you could have said: \\'I reduced latency by 30% by implementing a caching layer with Redis...\\' to show clear impact.')"
+    "string (A detailed, actionable suggestion for improvement. Give a concrete example. e.g., 'To improve, you could have said: \'I reduced latency by 30% by implementing a caching layer with Redis...\' to show clear impact.')"
   ],
   "nextQuestion": "string (a relevant follow-up question based on their specific answer)"
 }
@@ -67,4 +84,3 @@ Return a single JSON object with the following structure. Do not include any oth
     return NextResponse.json({ error: "failed to evaluate" }, { status: 500 });
   }
 }
-

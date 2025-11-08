@@ -30,6 +30,7 @@ export default function InterviewPage() {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [interviewStarted, setInterviewStarted] = useState(false);
+  const [loadingQuestions, setLoadingQuestions] = useState(false);
 
   // Recording state
   const [isRecording, setIsRecording] = useState(false);
@@ -203,6 +204,7 @@ export default function InterviewPage() {
   };
 
   const generateQuestions = async () => {
+    setLoadingQuestions(true);
     try {
       const res = await fetch("/api/interview/questions", {
         method: "POST",
@@ -223,6 +225,8 @@ export default function InterviewPage() {
       setQuestions(formattedQuestions);
     } catch (err) {
       console.error("Error generating questions:", err);
+    } finally {
+      setLoadingQuestions(false);
     }
   };
 
@@ -314,7 +318,7 @@ export default function InterviewPage() {
       });
 
       const data = await res.json();
-      const feedback = data.evaluation;
+      const evaluation = data.evaluation;
 
       const newAnswer: AnswerRecord = {
         id: `${Date.now()}`,
@@ -322,18 +326,25 @@ export default function InterviewPage() {
         transcript: transcript,
         videoUrl: videoUrl,
         feedback: {
-          score: feedback.score || 0,
-          strengths: feedback.strengths || [],
-          weaknesses: feedback.weaknesses || [],
-          suggestions: feedback.suggestions || [],
-          keyPoints: feedback.keyPoints || []
+          overallScore: evaluation.overallScore || 0,
+          rubricScores: evaluation.rubricScores || {
+            clarityConciseness: 0,
+            relevance: 0,
+            depthDetail: 0,
+            technicalAccuracy: 0,
+            problemSolvingApproach: 0,
+          },
+          strengths: evaluation.strengths || [],
+          weaknesses: evaluation.weaknesses || [],
+          suggestions: evaluation.suggestions || [],
+          keyPoints: evaluation.keyPoints || []
         },
         role: selectedRole!,
         timestamp: Date.now()
       };
 
       addAnsweredQuestion(newAnswer);
-      setCurrentFeedback(feedback);
+      setCurrentFeedback(evaluation);
 
       setQuestions(prev => prev.map((q, idx) =>
           idx === currentQuestionIndex ? { ...q, answered: true } : q
@@ -505,9 +516,14 @@ export default function InterviewPage() {
                           <div>
                             <div className="flex items-center justify-between mb-2">
                               <span className="text-sm font-medium">Score</span>
-                              <span className="text-2xl font-bold text-green-700 dark:text-green-300">{currentFeedback.score}/10</span>
+                                                            <span className="text-2xl font-bold text-green-700 dark:text-green-300">
+                                                            {currentFeedback.overallScore}/10
+                                                          </span>
                             </div>
-                            <div className="w-full bg-gray-200 rounded-full h-2"><div className="bg-green-600 h-2 rounded-full" style={{ width: `${(currentFeedback.score / 10) * 100}%` }} /></div>
+                            <div className="w-full bg-gray-200 rounded-full h-2">                                  <div
+                                      className="bg-green-600 h-2 rounded-full transition-all"
+                                      style={{ width: `${(currentFeedback.overallScore / 10) * 100}%` }}
+                                  /></div>
                           </div>
                           {currentFeedback.strengths?.length > 0 && (
                               <div>
@@ -540,7 +556,13 @@ export default function InterviewPage() {
                 <Card className="border-blue-200 bg-blue-50 dark:bg-blue-950 dark:border-blue-800">
                   <CardContent className="p-4">
                     <h3 className="text-sm font-semibold mb-2 text-blue-800 dark:text-blue-200">Question {currentQuestionIndex + 1}</h3>
-                    <p className="text-lg font-medium mb-4 text-blue-900 dark:text-blue-100">{currentQuestion?.question || "Loading..."}</p>
+                    <p className="text-lg font-medium mb-4 text-blue-900 dark:text-blue-100">
+                      {loadingQuestions ? (
+                        <span className="inline-flex items-center"><svg className="mr-2 h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path></svg>Generating questions...</span>
+                      ) : (
+                        currentQuestion?.question || ""
+                      )}
+                    </p>
                     {!interviewStarted ? (
                         <Button onClick={startInterview} className="w-full" size="lg"><Play className="mr-2 h-5 w-5" />Start Interview</Button>
                     ) : (
@@ -551,7 +573,22 @@ export default function InterviewPage() {
                                 {currentFeedback && <Button onClick={nextQuestion} variant="outline" className="w-full" disabled={processingAnswer}><SkipForward className="mr-2 h-4 w-4" />{answeredCount === questions.length ? "Finish & View Reports" : "Next Question"}</Button>}
                               </>
                           ) : (
-                              <Button onClick={stopAnswering} variant="destructive" className="w-full" disabled={processingAnswer}><StopCircle className="mr-2 h-4 w-4" />{processingAnswer ? "Processing..." : "Stop & Submit"}</Button>
+                              <Button onClick={stopAnswering} variant="destructive" className="w-full" disabled={processingAnswer}>
+                                {processingAnswer ? (
+                                  <>
+                                    <svg className="mr-2 h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                                    </svg>
+                                    Processing...
+                                  </>
+                                ) : (
+                                  <>
+                                    <StopCircle className="mr-2 h-4 w-4" />
+                                    Stop & Submit
+                                  </>
+                                )}
+                              </Button>
                           )}
                         </div>
                     )}

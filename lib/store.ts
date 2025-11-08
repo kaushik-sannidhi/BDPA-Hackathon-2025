@@ -2,7 +2,14 @@ import { create } from "zustand";
 import { openDB } from "idb";
 
 export interface AnswerFeedback {
-  score: number;
+  overallScore: number;
+  rubricScores: {
+    clarityConciseness: number;
+    relevance: number;
+    depthDetail: number;
+    technicalAccuracy: number;
+    problemSolvingApproach: number;
+  };
   strengths: string[];
   weaknesses: string[];
   suggestions: string[];
