@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { RouteLoading } from "@/components/RouteLoading";
@@ -7,6 +7,11 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { Suspense } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-heading",
+});
 
 export const metadata: Metadata = {
   title: "ApplAI",
@@ -24,7 +29,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full dark">
-      <body className={`${inter.className} flex flex-col min-h-screen`}>
+      <body className={`${inter.className} ${spaceGrotesk.variable} flex flex-col min-h-screen`}>
         <AuthProvider>
           <Suspense fallback={null}>
             <RouteLoading />

@@ -4,6 +4,17 @@
 
 @layer base {
   :root {
+    --background: 210 40% 96%;
+    --foreground: 222 47% 14%;
+    --primary: 266 85% 62%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 266 45% 88%;
+    --secondary-foreground: 222 47% 14%;
+    --accent: 268 70% 78%;
+    --accent-foreground: 222 40% 18%;
+  }
+
+  .dark {
     --background: 222 47% 11%;
     --foreground: 210 40% 98%;
     --primary: 270 91% 65%;
@@ -17,10 +28,24 @@
 
 @layer base {
   * {
+    @apply border-purple-200/50;
+  }
+
+  .dark * {
     @apply border-purple-800/30;
   }
+
   body {
-    @apply bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-foreground min-h-screen;
+    @apply min-h-screen transition-colors duration-500 text-slate-800;
+    background: radial-gradient(circle at top left, rgba(237, 233, 254, 0.65), rgba(243, 244, 255, 0.82)),
+      radial-gradient(circle at bottom right, rgba(221, 214, 254, 0.6), rgba(229, 231, 235, 0.85));
+    background-attachment: fixed;
+  }
+
+  .dark body {
+    @apply text-foreground;
+    background: radial-gradient(circle at top left, rgba(76, 29, 149, 0.55), rgba(15, 23, 42, 0.95)),
+      radial-gradient(circle at bottom right, rgba(30, 64, 175, 0.45), rgba(15, 23, 42, 0.95));
     background-attachment: fixed;
   }
 }
@@ -29,16 +54,29 @@
   .text-balance {
     text-wrap: balance;
   }
-  
+
   .glow-text {
-    text-shadow: 0 0 10px rgba(168, 85, 247, 0.5),
-                 0 0 20px rgba(168, 85, 247, 0.3);
+    text-shadow:
+      0 0 18px rgba(168, 85, 247, 0.4),
+      0 0 30px rgba(99, 102, 241, 0.3);
   }
-  
+
+  .font-heading {
+    font-family: var(--font-heading), sans-serif;
+  }
+
   .glass-effect {
-    background: rgba(15, 23, 42, 0.7);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(168, 85, 247, 0.3);
+    background: rgba(35, 18, 54, 0.75);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(147, 51, 234, 0.35);
+    transition: background 0.35s ease, border-color 0.35s ease, color 0.35s ease, box-shadow 0.35s ease;
+  }
+
+  html:not(.dark) .glass-effect {
+    background: rgba(249, 245, 255, 0.9);
+    border: 1px solid rgba(124, 58, 237, 0.18);
+    color: rgba(55, 48, 163, 0.88);
+    box-shadow: 0 20px 45px rgba(124, 58, 237, 0.16);
   }
 }
 

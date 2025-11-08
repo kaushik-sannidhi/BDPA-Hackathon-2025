@@ -3,6 +3,37 @@
 import Link from "next/link";
 import { ArrowRight, Video, FileText, BarChart3 } from "lucide-react";
 import { motion } from "framer-motion";
+import { Typewriter } from "@/components/Typewriter";
+
+const featureSections = [
+  {
+    icon: FileText,
+    title: "Your Profile",
+    description:
+      "Curate the story you want recruiters to see. Manage skills, tailor your target roles, and keep your resume in sync with the practice experience.",
+    href: "/profile",
+    gradient: "from-purple-400/16 via-fuchsia-500/14 to-violet-600/18",
+    accent: "from-purple-400 via-fuchsia-500 to-violet-600",
+  },
+  {
+    icon: Video,
+    title: "Mock Interview",
+    description:
+      "Step into a premium mock interview room with real-time eye contact, presence, and voice coaching—exactly what judges want to experience.",
+    href: "/interview",
+    gradient: "from-violet-500/18 via-purple-600/16 to-fuchsia-600/14",
+    accent: "from-fuchsia-500 via-purple-500 to-violet-500",
+  },
+  {
+    icon: BarChart3,
+    title: "Dashboard",
+    description:
+      "Translate practice into insights. Track momentum, uncover skill gaps, and surface the next best moves on a glowing analytics canvas.",
+    href: "/dashboard",
+    gradient: "from-purple-500/15 via-indigo-500/15 to-violet-700/18",
+    accent: "from-violet-400 via-purple-500 to-indigo-500",
+  },
+];
 
 export default function Home() {
   return (
@@ -11,74 +42,103 @@ export default function Home() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="text-center mb-16"
+        className="text-center mb-24"
       >
         <motion.div
           animate={{ y: [0, -10, 0] }}
           transition={{ duration: 3, repeat: Infinity }}
           className="inline-block mb-6"
         >
-          <img 
-            src="/assets/images/logo.svg" 
-            alt="ApplAI Logo" 
-            width={120} 
-            height={120} 
+          <img
+            src="/assets/images/logo.svg"
+            alt="ApplAI Logo"
+            width={120}
+            height={120}
             className="mx-auto"
           />
         </motion.div>
-        <h1 className="text-6xl font-bold mb-6 bg-gradient-to-r from-ink via-purple-500 to-ink bg-clip-text text-transparent glow-text">
+        <h1 className="font-heading text-6xl font-semibold tracking-tight mb-6 bg-gradient-to-r from-ink via-purple-400 to-ink bg-clip-text text-transparent glow-text">
           ApplAI
         </h1>
-        <p className="text-xl text-foreground/80 max-w-2xl mx-auto">
+        <Typewriter
+          text="Assess. Adapt. Ace."
+          typingSpeed={70}
+          startDelay={320}
+          cursorBlinkSpeed={420}
+          className="justify-center text-xl md:text-2xl text-purple-800 dark:text-purple-100"
+        />
+        <p className="mt-6 text-base md:text-lg text-foreground/80 max-w-2xl mx-auto leading-relaxed">
           Master your interview skills with AI-powered real-time coaching. Practice makes perfect,
           and we&apos;re here to help you apply.
         </p>
       </motion.div>
 
-      <div className="grid md:grid-cols-3 gap-8 mt-20">
-        {[
-          {
-            icon: FileText,
-            title: "Your Profile",
-            description: "Manage your skills, target role, and resume to personalize your experience",
-            href: "/profile",
-            color: "from-purple-500 to-violet-600",
-          },
-          {
-            icon: Video,
-            title: "Mock Interview",
-            description: "Real-time face tracking and coaching feedback during practice",
-            href: "/interview",
-            color: "from-violet-500 to-purple-600",
-          },
-          {
-            icon: BarChart3,
-            title: "Dashboard",
-            description: "View your skill analysis, gap analysis, and career pathways",
-            href: "/dashboard",
-            color: "from-purple-600 to-violet-700",
-          },
-        ].map((feature, idx) => (
-          <motion.div
-            key={feature.title}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: idx * 0.1 }}
-          >
-            <Link
-              href={feature.href}
-              className="block glass-effect rounded-2xl p-8 hover:shadow-glow-lg transition-all duration-300 group h-full"
+      <div className="space-y-24">
+        {featureSections.map((feature, index) => {
+          const isReversed = index % 2 === 1;
+          return (
+            <motion.section
+              key={feature.title}
+              initial={{ opacity: 0, y: 80, x: isReversed ? 60 : -60 }}
+              whileInView={{ opacity: 1, y: 0, x: 0 }}
+              transition={{ duration: 0.75, ease: "easeOut" }}
+              viewport={{ once: true, amount: 0.4 }}
+              className={`relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br ${feature.gradient} p-8 md:p-12`}
             >
-              <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${feature.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-glow`}>
-                <feature.icon className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-2xl font-bold mb-4 text-foreground group-hover:text-purple-400 transition-colors">
-                {feature.title}
-              </h3>
-              <p className="text-foreground/70 leading-relaxed">{feature.description}</p>
-            </Link>
-          </motion.div>
-        ))}
+              <div className="pointer-events-none absolute inset-0 opacity-40 blur-3xl" />
+              <Link
+                href={feature.href}
+                className="group relative grid items-center gap-10 md:grid-cols-2"
+              >
+                <motion.div
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  whileInView={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.6, ease: "easeOut", delay: 0.15 }}
+                  viewport={{ once: true, amount: 0.5 }}
+                  className={`order-1 flex justify-center ${
+                    isReversed
+                      ? "md:order-2 md:justify-end"
+                      : "md:order-1 md:justify-start"
+                  }`}
+                >
+                  <div className="relative">
+                    <div
+                      className={`absolute -inset-8 rounded-full bg-gradient-to-br ${feature.accent} opacity-55 blur-3xl transition duration-500 group-hover:opacity-80`}
+                    />
+                  <div className="relative flex h-48 w-48 items-center justify-center rounded-[36px] border border-purple-200/40 bg-gradient-to-br from-purple-50 via-white to-purple-100/80 text-purple-700 shadow-[0_25px_60px_rgba(168,85,247,0.18)] backdrop-blur-2xl transition duration-500 group-hover:shadow-[0_30px_70px_rgba(168,85,247,0.35)] dark:border-white/20 dark:bg-slate-900/55 dark:text-white dark:shadow-[0_25px_60px_rgba(124,58,237,0.35)] dark:group-hover:shadow-[0_35px_85px_rgba(139,92,246,0.45)]">
+                      <feature.icon className="h-20 w-20" />
+                    </div>
+                  </div>
+                </motion.div>
+
+                <div
+                  className={`order-2 max-w-xl text-left ${
+                    isReversed ? "md:order-1" : "md:order-2"
+                  }`}
+                >
+                  <span className="inline-flex items-center gap-2 rounded-full border border-purple-200/60 bg-purple-100/40 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-purple-800/80 dark:border-white/20 dark:bg-white/10 dark:text-white/70">
+                    {index + 1 < 10 ? `0${index + 1}` : index + 1} — Premium Feature
+                  </span>
+                  <h2 className="mt-6 font-heading text-4xl font-semibold text-white drop-shadow-[0_5px_35px_rgba(147,51,234,0.35)] transition-colors duration-500 group-hover:text-purple-100">
+                    {feature.title}
+                  </h2>
+                  <p className="mt-4 text-lg leading-relaxed text-slate-700 dark:text-white/75">
+                    {feature.description}
+                  </p>
+
+                  <div className="mt-8 inline-flex items-center gap-3 text-purple-200/80 transition-all duration-300 group-hover:text-purple-100">
+                    <span className="text-sm font-semibold uppercase tracking-[0.3em]">
+                      Explore
+                    </span>
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full border border-purple-200/40 bg-white/10 transition-all duration-500 group-hover:translate-x-2 group-hover:border-purple-200/80 group-hover:bg-white/20 dark:border-purple-200/20 dark:bg-white/5 dark:group-hover:border-purple-200/60">
+                      <ArrowRight className="h-4 w-4" />
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            </motion.section>
+          );
+        })}
       </div>
     </div>
   );

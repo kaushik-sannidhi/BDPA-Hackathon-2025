@@ -5,19 +5,20 @@ import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 import { logout } from "@/lib/firebase/auth";
-import { 
-  Home, 
-  User, 
-  BarChart3, 
-  Video, 
-  FileText, 
-  BookOpen, 
-  Briefcase,
+import {
+  Home,
+  User,
+  BarChart3,
+  Video,
+  FileText,
+  BookOpen,
   LogOut,
   Menu,
-  X
+  Moon,
+  Sun,
+  X,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 
 export function Navbar() {
@@ -25,10 +26,47 @@ export function Navbar() {
   const router = useRouter();
   const { user, loading } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [theme, setTheme] = useState<"light" | "dark">("dark");
+  const [isThemeReady, setIsThemeReady] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const storedTheme = window.localStorage.getItem("theme");
+    if (storedTheme === "light" || storedTheme === "dark") {
+      setTheme(storedTheme);
+    document.documentElement.classList.toggle("dark", storedTheme === "dark");
+    document.body.classList.toggle("dark", storedTheme === "dark");
+    } else {
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      const nextTheme = prefersDark ? "dark" : "light";
+      setTheme(nextTheme);
+      document.documentElement.classList.toggle("dark", prefersDark);
+      document.body.classList.toggle("dark", prefersDark);
+    }
+
+    setIsThemeReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isThemeReady) {
+      return;
+    }
+
+    document.documentElement.classList.toggle("dark", theme === "dark");
+    document.body.classList.toggle("dark", theme === "dark");
+    window.localStorage.setItem("theme", theme);
+  }, [theme, isThemeReady]);
 
   const handleLogout = async () => {
     await logout();
     router.push("/login");
+  };
+
+  const toggleTheme = () => {
+    setTheme((previous) => (previous === "dark" ? "light" : "dark"));
   };
 
   const navLinks = [
@@ -87,6 +125,15 @@ export function Navbar() {
 
           {/* User Actions */}
           <div className="hidden md:flex items-center gap-4">
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className="flex items-center justify-center rounded-full border border-purple-300/40 bg-gradient-to-r from-purple-200/20 via-purple-400/15 to-purple-200/20 p-2.5 text-foreground transition-all duration-300 hover:shadow-glow focus:outline-none focus:ring-2 focus:ring-purple-300/60 dark:border-purple-500/40 dark:bg-purple-500/10 dark:text-white"
+              aria-label="Toggle color theme"
+              title="Toggle color theme"
+            >
+              {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </button>
             {loading ? (
               <div className="w-8 h-8 border-2 border-purple-500 border-t-transparent rounded-full animate-spin" />
             ) : user ? (
@@ -123,6 +170,17 @@ export function Navbar() {
         {/* Mobile Menu */}
         {mobileMenuOpen && (
           <div className="md:hidden mt-4 pb-4 space-y-2">
+            <button
+              type="button"
+              onClick={() => {
+                toggleTheme();
+              }}
+              className="flex w-full items-center justify-center rounded-lg border border-purple-300/40 bg-gradient-to-r from-purple-200/20 via-purple-300/15 to-purple-200/25 py-3 text-foreground transition-all duration-300 hover:shadow-glow dark:border-purple-500/40 dark:bg-purple-500/10 dark:text-white"
+              aria-label="Toggle color theme"
+              title="Toggle color theme"
+            >
+              {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </button>
             {navLinks.map((link) => {
               const isActive = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href));
               const Icon = link.icon;
