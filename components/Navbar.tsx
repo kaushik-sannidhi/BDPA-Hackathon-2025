@@ -6,13 +6,10 @@ import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 import { logout } from "@/lib/firebase/auth";
 import { 
-  Home, 
   User, 
   BarChart3, 
   Video, 
-  FileText, 
-  BookOpen, 
-  Briefcase,
+  FileText,
   LogOut,
   Menu,
   X
@@ -33,10 +30,9 @@ export function Navbar() {
 
   const navLinks = [
     { href: "/profile", label: "Profile", icon: User },
-    { href: "/dashboard", label: "Dashboard", icon: BarChart3 },
+    { href: "/resources", label: "Resources", icon: BarChart3 },
     { href: "/interview", label: "Interview", icon: Video },
-    { href: "/resources", label: "Resources", icon: BookOpen },
-    { href: "/review", label: "Review", icon: FileText },
+    { href: "/resume-review", label: "Resume Review", icon: FileText },
   ];
 
   // Don't show navbar on login page

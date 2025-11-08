@@ -4,9 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Video, VideoOff, Mic, MicOff, Play, StopCircle, SkipForward, AlertCircle } from "lucide-react";
+import { ArrowLeft, Video, VideoOff, Mic, MicOff, Play, StopCircle, SkipForward, AlertCircle, BarChart3, MessageSquare } from "lucide-react";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { useAuth } from "@/contexts/AuthContext";
+import { InterviewReview } from "@/components/InterviewReview";
 
 interface Question {
   id: string;
@@ -48,6 +49,7 @@ export default function InterviewPage() {
   const { userProfile, user } = useAuth();
   const userSkills = userProfile?.skills || [];
   const selectedRole = userProfile?.selectedRole || null;
+  const [view, setView] = useState<"interview" | "review">("interview");
 
   // Interview state
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -405,14 +407,34 @@ export default function InterviewPage() {
   const currentQuestion = questions[currentQuestionIndex];
   const progress = questions.length > 0 ? ((answers.length / questions.length) * 100) : 0;
 
+  if (view === 'review') {
+    return (
+      <ProtectedRoute>
+        <div className="container mx-auto px-4 py-6 max-w-7xl">
+          <Button variant="ghost" onClick={() => setView('interview')} className="mb-4">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Interview
+          </Button>
+          <InterviewReview />
+        </div>
+      </ProtectedRoute>
+    )
+  }
+
   return (
       <ProtectedRoute>
         <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
           <div className="container mx-auto px-4 py-6 max-w-7xl">
-            <Button variant="ghost" onClick={() => router.push("/")} className="mb-4">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Home
-            </Button>
+            <div className="flex justify-between items-center mb-4">
+              <Button variant="ghost" onClick={() => router.push("/")}>
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Back to Home
+              </Button>
+              <Button variant="outline" onClick={() => setView('review')}>
+                <BarChart3 className="mr-2 h-4 w-4" />
+                View Past Sessions
+              </Button>
+            </div>
 
             {!interviewEnded ? (
                 <div className="grid lg:grid-cols-3 gap-6">
@@ -738,8 +760,8 @@ export default function InterviewPage() {
                           </Card>
 
                           <div className="flex gap-4 justify-center pt-4">
-                            <Button onClick={() => router.push("/profile")} variant="outline">
-                              View Saved Reports
+                            <Button onClick={() => setView('review')} variant="outline">
+                              View All Session Reports
                             </Button>
                             <Button onClick={() => window.location.reload()}>
                               Start New Interview
