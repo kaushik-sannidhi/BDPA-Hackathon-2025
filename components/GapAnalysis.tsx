@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { ExternalLink, BookOpen, Video, FileText } from "lucide-react";
+import { ExternalLink, BookOpen, Video, FileText, Loader2 } from "lucide-react";
 import { matchSkills, categorizeSkills } from "@/lib/skills";
+import { getLearningResources } from "@/lib/gemini"; // Still uses AI for learning resources
 
 interface LearningResource {
   title: string;
@@ -25,100 +26,51 @@ export function GapAnalysis({
   requiredSkills,
   roleName,
 }: GapAnalysisProps) {
-  const [missingSkills, setMissingSkills] = useState<string[]>([]);
-  const [matchedSkills, setMatchedSkills] = useState<string[]>([]);
-  const [matchPercentage, setMatchPercentage] = useState(0);
-  const [learningResources, setLearningResources] = useState<
-    Record<string, LearningResource[]>
-  >({});
-  const [loadingResources, setLoadingResources] = useState<Set<string>>(
-    new Set()
+  const [learningResources, setLearningResources] = useState<Record<string, LearningResource[]>>({});
+  const [loadingResources, setLoadingResources] = useState<Set<string>>(new Set());
+
+  const { matched, missing, matchPercentage } = useMemo(
+    () => matchSkills(userSkills, requiredSkills),
+    [userSkills, requiredSkills]
   );
 
-  // Ref cache to avoid re-fetching and to read latest cache inside async loops
-  const resourcesRef = useRef<Record<string, LearningResource[]>>(learningResources);
   useEffect(() => {
-    resourcesRef.current = learningResources;
-  }, [learningResources]);
+    if (missing.length === 0) return;
 
-  useEffect(() => {
-    if (!requiredSkills || requiredSkills.length === 0) return;
-
-    const { matched, missing, matchPercentage } = matchSkills(
-      userSkills,
-      requiredSkills
-    );
-    setMatchedSkills(matched);
-    setMissingSkills(missing);
-    setMatchPercentage(matchPercentage);
-  }, [userSkills, requiredSkills]);
-
-  useEffect(() => {
-    if (missingSkills.length === 0) return;
-
-    let isMounted = true;
     const controller = new AbortController();
 
     const fetchForSkill = async (skill: string) => {
-      // Skip if already cached
-      if (resourcesRef.current && resourcesRef.current[skill]) return;
+      if (learningResources[skill]) return;
 
-      // Mark loading
       setLoadingResources((prev) => new Set(prev).add(skill));
-
       try {
-        const response = await fetch("/api/learning-resources", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ skill }),
-          signal: controller.signal,
-        });
-
-        if (!isMounted || controller.signal.aborted) return;
-
-        if (response.ok) {
-          const { resources } = await response.json();
-          // Update both ref and state using functional update
-          setLearningResources((prev) => {
-            const next = { ...prev, [skill]: resources || [] };
-            resourcesRef.current = next;
-            return next;
-          });
-        }
+        // This part still uses Gemini, as requested for learning resources, not matching.
+        const resources = await getLearningResources(skill);
+        setLearningResources((prev) => ({ ...prev, [skill]: resources || [] }));
       } catch (error) {
-        if ((error as any)?.name === "AbortError") {
-          // aborted
-        } else {
+        if ((error as any)?.name !== "AbortError") {
           console.error(`Error fetching resources for ${skill}:`, error);
         }
       } finally {
-        // Avoid returning inside finally — only update state if still mounted
-        if (isMounted) {
-          setLoadingResources((prev) => {
-            const next = new Set(prev);
-            next.delete(skill);
-            return next;
-          });
-        }
+        setLoadingResources((prev) => {
+          const next = new Set(prev);
+          next.delete(skill);
+          return next;
+        });
       }
     };
 
-    // Fire off fetches for missing skills that are not cached yet.
-    for (const skill of missingSkills) {
-      if (!resourcesRef.current || !resourcesRef.current[skill]) {
-        fetchForSkill(skill);
-      }
+    for (const skill of missing) {
+      fetchForSkill(skill);
     }
 
     return () => {
-      isMounted = false;
       controller.abort();
     };
-  }, [missingSkills]);
+  }, [missing, learningResources]);
 
-  // Memoize categorizations to avoid recompute on every render
-  const categorizedMissing = useMemo(() => categorizeSkills(missingSkills), [missingSkills]);
-  const categorizedMatched = useMemo(() => categorizeSkills(matchedSkills), [matchedSkills]);
+  const categorizedMissing = useMemo(() => categorizeSkills(missing), [missing]);
+  const categorizedMatched = useMemo(() => categorizeSkills(matched), [matched]);
 
   const getResourceIcon = (type: string) => {
     switch (type) {
@@ -166,7 +118,7 @@ export function GapAnalysis({
           <div className="grid md:grid-cols-2 gap-6">
             <div>
               <h3 className="text-lg font-semibold mb-3 text-green-600">
-                Matched Skills ({matchedSkills.length})
+                Matched Skills ({matched.length})
               </h3>
               <div className="space-y-3">
                 {Object.entries(categorizedMatched).map(
@@ -191,7 +143,7 @@ export function GapAnalysis({
 
             <div>
               <h3 className="text-lg font-semibold mb-3 text-orange-600">
-                Missing Skills ({missingSkills.length})
+                Missing Skills ({missing.length})
               </h3>
               <div className="space-y-3">
                 {Object.entries(categorizedMissing).map(
@@ -217,7 +169,7 @@ export function GapAnalysis({
         </CardContent>
       </Card>
 
-      {missingSkills.length > 0 && (
+      {missing.length > 0 && (
         <Card>
           <CardHeader>
             <CardTitle>Learning Resources</CardTitle>
@@ -227,13 +179,14 @@ export function GapAnalysis({
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {missingSkills.map((skill) => (
+              {missing.map((skill) => (
                 <div key={skill} className="border rounded-lg p-4">
                   <h4 className="font-semibold mb-3">{skill}</h4>
                   {loadingResources.has(skill) ? (
-                    <p className="text-sm text-muted-foreground">
+                    <div className="flex items-center text-sm text-muted-foreground">
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       Loading resources...
-                    </p>
+                    </div>
                   ) : learningResources[skill]?.length > 0 ? (
                     <div className="space-y-2">
                       {learningResources[skill].map((resource, idx) => (

@@ -36,33 +36,11 @@ export function SkillInput({ skills, onSkillsChange }: SkillInputProps) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setInputValue(value);
 
-    if (value.trim() && value.length >= 2) {
-      // Try AI suggestions first
-      try {
-        const response = await fetch("/api/skills/suggest", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ partialSkill: value }),
-        });
-
-        if (response.ok) {
-          const { suggestions } = await response.json();
-          const filtered = suggestions
-            .filter((skill: string) => !skills.includes(normalizeSkill(skill)))
-            .slice(0, 5);
-          setSuggestions(filtered);
-          setShowSuggestions(true);
-          return;
-        }
-      } catch (error) {
-        console.error("Error fetching AI suggestions:", error);
-      }
-
-      // Fallback to common skills
+    if (value.trim()) {
       const filtered = commonSkills
         .filter(
           (skill) =>
@@ -128,7 +106,7 @@ export function SkillInput({ skills, onSkillsChange }: SkillInputProps) {
         {showSuggestions && suggestions.length > 0 && (
           <div
             ref={suggestionsRef}
-            className="absolute z-10 mt-1 w-full rounded-md border bg-white dark:bg-gray-800 shadow-lg"
+            className="absolute z-10 mt-1 w-full rounded-md border bg-background shadow-lg"
           >
             {suggestions.map((suggestion) => (
               <button

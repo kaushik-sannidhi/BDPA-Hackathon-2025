@@ -5,7 +5,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, BarChart, Bar, XAxis, YAxis } from "recharts";
 import { matchSkills, categorizeSkills } from "@/lib/skills";
 import { MarketInsights } from "@/components/MarketInsights";
-import { StudyPlanGenerator } from "@/components/StudyPlanGenerator";
 
 interface DashboardProps {
   userSkills: string[];
@@ -20,9 +19,10 @@ export function Dashboard({ userSkills, requiredSkills, roleName }: DashboardPro
     return null;
   }
 
-  // Memoize matching computation — it's pure and potentially expensive
-  const matchResult = useMemo(() => matchSkills(userSkills, requiredSkills), [userSkills, requiredSkills]);
-  const { matched, missing, matchPercentage } = matchResult;
+  const { matched, missing, matchPercentage } = useMemo(
+    () => matchSkills(userSkills, requiredSkills),
+    [userSkills, requiredSkills]
+  );
 
   const total = requiredSkills.length;
 
@@ -32,6 +32,7 @@ export function Dashboard({ userSkills, requiredSkills, roleName }: DashboardPro
   ], [matched.length, missing.length]);
 
   const categorizedMissing = useMemo(() => categorizeSkills(missing), [missing]);
+  
   const categoryData = useMemo(() => [
     { category: "Languages", matched: categorizedMissing.programmingLanguages.length },
     { category: "Frameworks", matched: categorizedMissing.frameworks.length },
@@ -122,20 +123,6 @@ export function Dashboard({ userSkills, requiredSkills, roleName }: DashboardPro
 
       <MarketInsights role={roleName} />
     </div>
-
-    {missing.length > 0 && (
-      <Card className="mt-6">
-        <CardHeader>
-          <CardTitle>Study Plan Generator</CardTitle>
-          <CardDescription>
-            Create a personalized learning schedule for your missing skills
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <StudyPlanGenerator missingSkills={missing} />
-        </CardContent>
-      </Card>
-    )}
   </div>
   );
 }
