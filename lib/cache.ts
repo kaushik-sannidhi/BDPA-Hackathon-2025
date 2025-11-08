@@ -1,65 +1,50 @@
-// Simple in-memory TTL cache with in-flight de-duplication and size bound.
-// Server-only usage.
+// Simple in-memory cache implementation for Next.js
 
-interface CacheEntry<V> {
-  value: V;
+interface CacheEntry<T> {
+  value: T;
   expiresAt: number;
 }
 
 const cache = new Map<string, CacheEntry<any>>();
-const pending = new Map<string, Promise<any>>();
 
-const DEFAULT_TTL_SECONDS = Number(process.env.GEMINI_CACHE_TTL_SECONDS ?? 1800); // 30 min
-const MAX_ENTRIES = Number(process.env.GEMINI_CACHE_MAX_ENTRIES ?? 200);
-const DISABLED = (process.env.GEMINI_CACHE_DISABLED ?? "").toLowerCase() === "true" || process.env.GEMINI_CACHE_DISABLED === "1";
-
-function evictIfNeeded() {
-  while (cache.size > MAX_ENTRIES) {
-    const firstKey = cache.keys().next().value;
-    if (!firstKey) break;
-    cache.delete(firstKey);
-  }
-}
-
-export async function getOrSet<T>(key: string, fetcher: () => Promise<T>, ttlSeconds: number = DEFAULT_TTL_SECONDS): Promise<T> {
-  if (!key) {
-    // No key? Don't cache.
-    return fetcher();
-  }
-  if (DISABLED) {
-    return fetcher();
-  }
-
+/**
+ * Get a value from cache, or set it if it doesn't exist
+ * @param key Cache key
+ * @param getValue Function that returns a Promise with the value to cache
+ * @param ttl Time to live in milliseconds (default: 5 minutes)
+ * @returns The cached or newly fetched value
+ */
+export async function getOrSet<T>(
+  key: string,
+  getValue: () => Promise<T>,
+  ttl: number = 5 * 60 * 1000 // 5 minutes default
+): Promise<T> {
   const now = Date.now();
-  const hit = cache.get(key);
-  if (hit && hit.expiresAt > now) {
-    // Touch for simple LRU behavior
-    cache.delete(key);
-    cache.set(key, hit);
-    return hit.value as T;
+  const cached = cache.get(key);
+
+  // Return cached value if it exists and hasn't expired
+  if (cached && cached.expiresAt > now) {
+    return cached.value;
   }
 
-  const inFlight = pending.get(key);
-  if (inFlight) {
-    return inFlight as Promise<T>;
-  }
+  // Otherwise, get the new value and cache it
+  const value = await getValue();
+  cache.set(key, {
+    value,
+    expiresAt: now + ttl,
+  });
 
-  const p = (async () => {
-    try {
-      const value = await fetcher();
-      cache.set(key, { value, expiresAt: now + ttlSeconds * 1000 });
-      evictIfNeeded();
-      return value as T;
-    } finally {
-      pending.delete(key);
-    }
-  })();
-
-  pending.set(key, p);
-  return p;
+  return value;
 }
 
-export function clearCache() {
-  cache.clear();
-  pending.clear();
+/**
+ * Clear the entire cache or a specific key
+ * @param key Optional key to clear. If not provided, clears the entire cache.
+ */
+export function clearCache(key?: string): void {
+  if (key) {
+    cache.delete(key);
+  } else {
+    cache.clear();
+  }
 }
