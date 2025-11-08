@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ArrowRight, Video, FileText, BarChart3 } from "lucide-react";
 import { motion } from "framer-motion";
+import GhostCursor from "@/components/GhostCursor";
 import { Typewriter } from "@/components/Typewriter";
 
 const featureSections = [
@@ -38,40 +39,53 @@ const featureSections = [
 export default function Home() {
   return (
     <div className="container mx-auto px-4 py-16">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
+      <motion.section
+        initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="text-center mb-24"
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="mb-28 flex justify-center"
       >
-        <motion.div
-          animate={{ y: [0, -10, 0] }}
-          transition={{ duration: 3, repeat: Infinity }}
-          className="inline-block mb-6"
-        >
-          <img
-            src="/assets/images/logo.svg"
-            alt="ApplAI Logo"
-            width={120}
-            height={120}
-            className="mx-auto"
-          />
-        </motion.div>
-        <h1 className="font-heading text-6xl font-semibold tracking-tight mb-6 bg-gradient-to-r from-ink via-purple-400 to-ink bg-clip-text text-transparent glow-text">
-          ApplAI
-        </h1>
-        <Typewriter
-          text="Assess. Adapt. Ace."
-          typingSpeed={70}
-          startDelay={320}
-          cursorBlinkSpeed={420}
-          className="justify-center text-xl md:text-2xl text-purple-800 dark:text-purple-100"
-        />
-        <p className="mt-6 text-base md:text-lg text-foreground/80 max-w-2xl mx-auto leading-relaxed">
-          Master your interview skills with AI-powered real-time coaching. Practice makes perfect,
-          and we&apos;re here to help you apply.
-        </p>
-      </motion.div>
+        <div className="relative isolate flex h-[560px] w-full max-w-6xl flex-col overflow-hidden rounded-[48px] border border-purple-200/40 bg-gradient-to-br from-white/80 via-purple-100/70 to-white/60 p-8 text-center shadow-[0_35px_90px_rgba(124,58,237,0.25)] backdrop-blur-2xl dark:border-white/10 dark:from-[#060318] dark:via-[#140c35] dark:to-[#1e1b4b] dark:shadow-[0_45px_120px_rgba(99,102,241,0.35)] md:p-16">
+          <div className="pointer-events-none absolute inset-0 opacity-70">
+            <GhostCursor
+              color="#B19EEF"
+              brightness={1}
+              edgeIntensity={0.1}
+              trailLength={60}
+              inertia={0.55}
+              grainIntensity={0.06}
+              bloomStrength={0.18}
+              bloomRadius={1.1}
+              bloomThreshold={0.03}
+              fadeDelayMs={1200}
+              fadeDurationMs={1800}
+              maxDevicePixelRatio={0.8}
+            />
+          </div>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,#c4b5fd1f,transparent_65%)] dark:bg-[radial-gradient(circle_at_top,#7c3aed26,transparent_65%)]" />
+          <div className="relative z-10 flex h-full flex-col items-center justify-center gap-10">
+            <motion.div
+              animate={{ y: [0, -12, 0] }}
+              transition={{ duration: 3.2, repeat: Infinity }}
+              className="inline-flex h-32 w-32 items-center justify-center rounded-[28px] bg-gradient-to-br from-purple-500 via-fuchsia-500 to-purple-700 shadow-[0_30px_80px_rgba(147,51,234,0.45)]"
+            >
+              <img src="/assets/images/logo.svg" alt="ApplAI Logo" className="h-20 w-20" />
+            </motion.div>
+            <div className="space-y-6">
+              <h1 className="font-heading text-6xl font-semibold tracking-tight text-purple-900 drop-shadow-[0_18px_70px_rgba(147,51,234,0.45)] dark:text-white">
+                ApplAI
+              </h1>
+              <Typewriter
+                text="Assess. Adapt. Ace."
+                typingSpeed={60}
+                startDelay={250}
+                cursorBlinkSpeed={360}
+                className="justify-center text-3xl md:text-5xl text-purple-800 dark:text-purple-100"
+              />
+            </div>
+          </div>
+        </div>
+      </motion.section>
 
       <div className="space-y-24">
         {featureSections.map((feature, index) => {
