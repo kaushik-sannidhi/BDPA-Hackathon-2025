@@ -1,203 +1,249 @@
-# Passionfruit - AI-Powered Interview Coach 🤖🎤
+# Passionfruit - AI Career Coach & Interview Assistant 🚀
 
-A cutting-edge Next.js 15 application that helps you ace your interviews with AI-powered practice sessions, real-time feedback, and performance analytics.
+A comprehensive career development platform that combines AI-powered interview practice with intelligent job matching to help you land your dream role. Built with Next.js 15 and modern web technologies.
 
-## Features
+## ✨ Key Features
 
-### 🎥 Mock Interview
-- **Real-time Face Tracking**: Uses MediaPipe FaceMesh via TensorFlow.js for in-browser face detection
-- **Live Metrics**: Eye contact, smile detection, head pose, and speaking activity
-- **HUD Gauges**: Beautiful real-time visual feedback on your performance
-- **Privacy First**: All video processing happens in your browser - no video is ever uploaded
+### 🎯 Career Pathway Matcher
+- **Smart Job Matching**: Advanced algorithm matches your skills with relevant job opportunities
+- **Skill Gap Analysis**: Identifies key skills you need to develop for your target roles
+- **Salary Insights**: Real-time salary range data for matched positions
+- **Responsibility Preview**: Detailed breakdown of day-to-day responsibilities
 
-### 📝 Interview Coaching
-- **Question Queue**: Role-based interview questions (Frontend, C/C++ Systems, Data Science, General)
-- **Real-time Tips**: Non-blocking toast notifications with actionable feedback
-- **Session Reports**: Detailed timeline charts and performance summaries
-- **AI-Powered Feedback**: Personalized coaching tips based on your performance
+### 🎤 AI Interview Coach
+- **Real-time Feedback**: Instant analysis of your interview performance
+- **Face & Speech Analysis**: Tracks eye contact, speech patterns, and body language
+- **Practice Sessions**: Record and review mock interviews
+- **Personalized Tips**: Actionable suggestions to improve your interview skills
 
-### 📄 Resume Integration
-- **Skills Extraction**: Upload or paste your resume to extract relevant skills
-- **Personalized Questions**: Interview questions tailored to your role and skills
-- **Keyword Detection**: Automatic identification of technical skills and keywords
+### 📄 Resume Optimization
+- **Skills Extraction**: Automatically identifies and extracts skills from your resume
+- **ATS Optimization**: Helps format your resume to pass through applicant tracking systems
+- **Cover Letter Generator**: AI-powered tool to create tailored cover letters
+- **Portfolio Builder**: Showcase your projects and achievements
 
-## Tech Stack
+## 🛠 Tech Stack
 
-- **Framework**: Next.js 15 (App Router)
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS with custom animations and glow effects
-- **Face Tracking**: TensorFlow.js + MediaPipe FaceMesh
-- **Charts**: Recharts
+- **Frontend**: Next.js 15 (App Router), React 18, TypeScript
+- **Styling**: Tailwind CSS, Framer Motion
+- **AI & ML**: TensorFlow.js, MediaPipe, OpenAI
+- **Data Visualization**: Recharts
 - **State Management**: Zustand
-- **Storage**: IndexedDB (local browser storage)
-- **Animations**: Framer Motion
-- **Testing**: Vitest
+- **Storage**: Firebase (Authentication, Firestore), IndexedDB
+- **PDF Processing**: PDF.js, React-PDF
+- **Testing**: Vitest, React Testing Library
 
-## Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 
 - Node.js 18+ 
 - npm or yarn
+- Firebase project (for authentication and database)
 
 ### Installation
 
 1. Clone the repository:
 ```bash
-cd "BDPA Hackathon 2"
+git clone https://github.com/yourusername/BDPA-Hackathon-2025.git
+cd BDPA-Hackathon-2025
 ```
 
 2. Install dependencies:
 ```bash
 npm install
+# or
+yarn install
 ```
 
-3. (Optional) Set up OpenAI API key for enhanced AI feedback:
-```bash
-# Create .env.local file
-echo "OPENAI_API_KEY=[EXAMPLE]" > .env.local
+3. Set up environment variables:
+Create a `.env.local` file in the root directory with your Firebase and API keys:
+```env
+NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project_id.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_bucket.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+OPENAI_API_KEY=your_openai_key  # Optional for enhanced features
 ```
-*Note: The app works without an API key using mock responses*
 
-4. Run the development server:
+4. Start the development server:
 ```bash
 npm run dev
+# or
+yarn dev
 ```
 
 5. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-## Usage
+## 🎯 Key Workflows
 
-### 60-Second Demo Script
+### 1. Career Pathway Discovery
+- Navigate to `/dashboard`
+- Upload your resume or manually enter your skills
+- View personalized job matches with compatibility scores
+- Explore skill requirements and salary expectations
+- Identify skill gaps and learning opportunities
 
-1. **Set Up Profile** (10s)
-   - Navigate to `/profile`
-   - Upload your resume or add skills manually
-   - Select your target role (e.g., "Frontend Developer")
-   - Review extracted skills
+### 2. AI-Powered Interview Practice
+- Go to `/interview`
+- Select your target job role and difficulty level
+- Complete a mock interview with real-time feedback
+- Review your performance metrics and recordings
+- Get personalized improvement suggestions
 
-2. **Start Interview** (30s)
-   - Go to `/interview`
-   - Click "Start Interview" and grant camera/mic permissions
-   - Watch the real-time HUD gauges update
-   - Select a question from the queue
-   - Observe real-time tips appearing
+### 3. Resume & Profile Optimization
+- Visit `/profile` to manage your skills and experience
+- Upload your resume for automatic parsing
+- Get suggestions for improving your resume's ATS compatibility
+- Generate tailored cover letters for specific job applications
 
-3. **Review Session** (20s)
-   - Click "Stop Interview"
-   - View performance charts and timeline
-   - Read AI-generated feedback and tips
-   - Check average scores
-
-## Project Structure
+## 🗂 Project Structure
 
 ```
 ├── app/
-│   ├── api/coach/          # AI coaching endpoint
-│   ├── interview/          # Mock interview page
-│   ├── review/             # Session review page
-│   ├── resume/             # Resume upload page
+│   ├── api/                # API routes
+│   │   ├── career/         # Job matching endpoints
+│   │   ├── coach/          # AI coaching endpoints
+│   │   └── extract-skills/ # Resume parsing
+│   ├── dashboard/          # User dashboard
+│   ├── interview/          # Mock interview interface
+│   ├── login/              # Authentication
 │   └── page.tsx            # Landing page
 ├── components/
-│   ├── CameraPanel.tsx     # Webcam capture and face tracking
-│   ├── HudGauges.tsx       # Real-time metrics display
-│   ├── QuestionQueue.tsx   # Interview questions
-│   ├── TipsToasts.tsx      # Real-time coaching tips
-│   ├── SummaryCharts.tsx   # Performance visualization
-│   └── ConsentDialog.tsx   # Privacy consent
+│   ├── auth/               # Authentication components
+│   ├── ui/                 # Reusable UI components
+│   ├── CameraPanel.tsx     # Webcam and face tracking
+│   ├── CareerPathways.tsx  # Job matching interface
+│   └── ...
+├── contexts/               # React contexts
 ├── lib/
-│   ├── faceTracking.ts     # Face detection and metrics
-│   ├── audioAnalysis.ts    # Audio level and filler word detection
-│   ├── signalProcessing.ts # Signal smoothing and normalization
-│   ├── store.ts            # Zustand state management
-│   └── __tests__/          # Unit tests
+│   ├── firebase/           # Firebase configuration
+│   ├── jobs.ts             # Job database and matching logic
+│   ├── jobMatching.ts      # Skill-based matching algorithm
+│   └── __tests__/          # Test files
 └── public/                 # Static assets
 ```
 
-## Key Components
+## 🔍 Key Components
 
-### CameraPanel
-- Captures webcam stream using `getUserMedia`
-- Renders to `<video>` and offscreen `<canvas>`
-- Runs face tracking in real-time (no server upload)
-- Handles camera permission errors gracefully
+### CareerPathways
+- Displays job matches based on user skills
+- Shows compatibility scores and skill requirements
+- Provides salary insights and role descriptions
+- Visualizes skill gaps and learning paths
 
-### Face Tracking
-- Uses `@tensorflow-models/face-landmarks-detection` with MediaPipe backend
-- Computes:
-  - Eye openness (blink detection)
-  - Head pose (yaw/pitch/roll)
-  - Smile probability
-- All processing happens client-side
+### Job Matching System
+- **Skills Database**: Comprehensive collection of job roles and required skills
+- **Matching Algorithm**: Weights skills by importance and relevance
+- **Scoring System**: 70% match percentage + 30% skill count
+- **UI Feedback**: Visual indicators for matched and missing skills
 
-### Audio Analysis
-- Uses WebAudio API to analyze microphone input
-- Detects speaking activity and filler words
-- No audio recordings saved
+### Interview Analytics
+- **Performance Metrics**: Tracks key interview metrics
+- **Progress Tracking**: Monitors improvement over time
+- **AI Feedback**: Generates personalized coaching tips
+- **Session History**: Stores and compares past interviews
 
-### State Machine
-Interview flow: `idle` → `prepping` → `live` → `reviewing`
+## 🧪 Testing
 
-## Testing
-
-Run tests with:
+Run the test suite with:
 ```bash
 npm test
+# or for UI mode
+npm run test:ui
 ```
 
-Tests cover:
-- Signal smoothing functions
-- Smile detection heuristics
-- Head pose normalization
-- Eye contact calculations
+Test coverage includes:
+- Job matching algorithm
+- Skill extraction and parsing
+- Face tracking and analysis
+- State management
+- Utility functions
 
-## Building for Production
+## 🚀 Building for Production
 
+1. Build the application:
 ```bash
 npm run build
+```
+
+2. Start the production server:
+```bash
 npm start
 ```
 
-## Privacy & Data
+3. Deploy to Vercel:
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fyourusername%2FBDPA-Hackathon-2025)
 
-- **No Video Upload**: All video processing is client-side only
-- **No Audio Recording**: Only audio levels are analyzed, no recordings saved
-- **Local Storage**: Session data stored in IndexedDB (browser only)
-- **Delete All Data**: Button available in review page to clear all local data
+## 🔒 Privacy & Data Security
 
-## Browser Compatibility
+- **Client-Side Processing**: All video/audio analysis happens in your browser
+- **Optional Cloud Storage**: Choose to save progress to your account (Firebase)
+- **Data Encryption**: Sensitive data is encrypted in transit and at rest
+- **Transparent Controls**: Easily view and delete your data at any time
+- **GDPR Compliant**: Built with privacy regulations in mind
 
-- **Recommended**: Latest Chrome on macOS
-- **Required**: Modern browser with WebRTC, WebAudio, and IndexedDB support
+## 🌐 Browser Support
 
-## Environment Variables
+- **Chrome**: Latest 2 versions (recommended)
+- **Firefox**: Latest 2 versions
+- **Edge**: Latest 2 versions
+- **Safari**: 15.4+
 
-- `OPENAI_API_KEY` (optional): For enhanced AI coaching feedback. If not provided, uses deterministic mock responses.
+*For best experience, use the latest version of Chrome with WebRTC and WebAudio support*
 
-## Troubleshooting
+## ⚙️ Configuration
 
-### Camera not working
-- Ensure you've granted camera/mic permissions
-- Try refreshing the page
-- Check browser console for errors
-- App will fall back to "Demo Mode" if camera is unavailable
+### Required Environment Variables
+```env
+NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project_id.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_bucket.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+```
 
-### Face tracking not detecting
-- Ensure good lighting
-- Face the camera directly
-- Check browser console for TensorFlow.js loading errors
+### Optional
+```env
+OPENAI_API_KEY=your_openai_key  # For enhanced AI features
+```
 
-### Performance issues
-- Close other browser tabs
-- Reduce browser window size
-- Check that WebGL is enabled (required for TensorFlow.js)
+## 🛠 Troubleshooting
 
-## License
+### Authentication Issues
+- Clear browser cache and cookies
+- Ensure Firebase project is properly configured
+- Check browser console for any error messages
 
-MIT
+### Job Matching Problems
+- Make sure your skills are up to date
+- Try refreshing the job matches
+- Check console for any API errors
 
-## Acknowledgments
+### Performance Optimization
+- Close unused browser tabs
+- Disable browser extensions if experiencing slowdowns
+- Ensure hardware acceleration is enabled in browser settings
 
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please read our [Contributing Guidelines](CONTRIBUTING.md) for details on how to get started.
+
+## 🙏 Acknowledgments
+
+- Built for the BDPA Hackathon 2025
+- Thanks to all contributors who have helped improve this project
+
+## 📞 Support
+
+For support, please [open an issue](https://github.com/yourusername/BDPA-Hackathon-2025/issues) or contact the development team.
 - Built with Next.js 15
 - Face tracking powered by TensorFlow.js and MediaPipe
 - UI components styled with Tailwind CSS
