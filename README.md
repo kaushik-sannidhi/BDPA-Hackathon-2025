@@ -240,10 +240,6 @@ Contributions are welcome! Please read our [Contributing Guidelines](CONTRIBUTIN
 
 - Built for the BDPA Hackathon 2025
 - Thanks to all contributors who have helped improve this project
-
-## 📞 Support
-
-For support, please [open an issue](https://github.com/yourusername/BDPA-Hackathon-2025/issues) or contact the development team.
 - Built with Next.js 15
 - Face tracking powered by TensorFlow.js and MediaPipe
 - UI components styled with Tailwind CSS
