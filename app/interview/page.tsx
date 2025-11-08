@@ -223,6 +223,12 @@ export default function InterviewPage() {
   const processAnswer = async () => {
     setProcessingAnswer(true);
     const currentQuestion = questions[currentQuestionIndex];
+    
+    if (!currentQuestion) {
+      console.error('No current question found');
+      setProcessingAnswer(false);
+      return;
+    }
 
     try {
       // Create video blob

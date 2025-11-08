@@ -91,13 +91,13 @@ export function normalizeSkill(skill: string): string {
     .join(" ");
 }
 
-export function matchSkills(userSkills: string[], requiredSkills: string[]): {
+export function matchSkills(userSkills: string[] = [], requiredSkills: string[] = []): {
   matched: string[];
   missing: string[];
   matchPercentage: number;
 } {
-  const normalizedUser = userSkills.map(normalizeSkill);
-  const normalizedRequired = requiredSkills.map(normalizeSkill);
+  const normalizedUser = (userSkills || []).map(normalizeSkill);
+  const normalizedRequired = (requiredSkills || []).map(normalizeSkill);
   
   const matched: string[] = [];
   const missing: string[] = [];
