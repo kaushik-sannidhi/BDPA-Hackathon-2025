@@ -106,11 +106,11 @@ export function TipsToasts({ metrics }: TipsToastsProps) {
   const getColor = (type: Tip["type"]) => {
     switch (type) {
       case "success":
-        return "from-green-400 to-emerald-500";
+        return "from-purple-500 to-violet-600";
       case "warning":
-        return "from-yellow-400 to-orange-500";
+        return "from-yellow-500 to-orange-500";
       default:
-        return "from-blue-400 to-cyan-500";
+        return "from-purple-500 to-violet-600";
     }
   };
 
@@ -125,18 +125,18 @@ export function TipsToasts({ metrics }: TipsToastsProps) {
               initial={{ opacity: 0, x: 100 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 100 }}
-              className={`glass-effect rounded-lg p-4 shadow-glow border-l-4 bg-gradient-to-r ${getColor(tip.type)}/10 border-${tip.type === "success" ? "green" : tip.type === "warning" ? "yellow" : "blue"}-400`}
+              className={`glass-effect rounded-lg p-4 shadow-glow border-l-4 bg-gradient-to-r ${getColor(tip.type)}/10 border-${tip.type === "success" ? "purple" : tip.type === "warning" ? "yellow" : "purple"}-500`}
             >
               <div className="flex items-start gap-3">
                 <Icon className={`w-5 h-5 flex-shrink-0 mt-0.5 ${
-                  tip.type === "success" ? "text-green-500" : tip.type === "warning" ? "text-yellow-500" : "text-blue-500"
+                  tip.type === "success" ? "text-purple-500" : tip.type === "warning" ? "text-yellow-500" : "text-purple-500"
                 }`} />
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-ink">{tip.message}</p>
+                  <p className="text-sm font-medium text-foreground">{tip.message}</p>
                 </div>
                 <button
                   onClick={() => removeTip(tip.id)}
-                  className="text-ink/40 hover:text-ink transition-colors"
+                  className="text-foreground/40 hover:text-foreground transition-colors"
                 >
                   ×
                 </button>

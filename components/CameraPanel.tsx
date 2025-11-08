@@ -213,16 +213,16 @@ export function CameraPanel({ onMetricsUpdate }: CameraPanelProps) {
             )}
           </>
         ) : (
-          <div className="aspect-video flex items-center justify-center bg-gradient-to-br from-sky-100 to-blue-100">
+          <div className="aspect-video flex items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900">
             <div className="text-center">
-              <Video className="w-16 h-16 mx-auto mb-4 text-sky-500" />
-              <p className="text-ink/70">Camera not started</p>
+              <Video className="w-16 h-16 mx-auto mb-4 text-purple-500" />
+              <p className="text-foreground/70">Camera not started</p>
             </div>
           </div>
         )}
       </div>
       {error && (
-        <div className="mt-4 p-4 bg-yellow-100 border border-yellow-400 rounded-lg text-ink">
+        <div className="mt-4 p-4 bg-yellow-900/30 border border-yellow-600/50 rounded-lg text-foreground">
           {error}
         </div>
       )}

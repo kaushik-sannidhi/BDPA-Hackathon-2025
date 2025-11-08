@@ -18,18 +18,18 @@ export default function Home() {
           transition={{ duration: 3, repeat: Infinity }}
           className="inline-block mb-6"
         >
-          <Sparkles className="w-20 h-20 text-sky-500 mx-auto animate-glow-pulse" />
+          <Sparkles className="w-20 h-20 text-purple-500 mx-auto" />
         </motion.div>
-        <h1 className="text-6xl font-bold mb-6 bg-gradient-to-r from-ink via-sky-600 to-ink bg-clip-text text-transparent glow-text">
+        <h1 className="text-6xl font-bold mb-6 bg-gradient-to-r from-ink via-purple-500 to-ink bg-clip-text text-transparent glow-text">
           ApplAI
         </h1>
-        <p className="text-xl text-ink/80 max-w-2xl mx-auto mb-8">
+        <p className="text-xl text-foreground/80 max-w-2xl mx-auto mb-8">
           Master your interview skills with AI-powered real-time coaching. Practice makes perfect,
           and we&apos;re here to help you apply.
         </p>
         <Link
           href="/interview"
-          className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-sky-400 to-sky-600 text-white rounded-xl font-semibold text-lg shadow-glow-lg hover:shadow-glow-lg/80 transition-all duration-300 hover:scale-105 animate-glow-pulse"
+          className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-purple-500 to-violet-600 text-white rounded-xl font-semibold text-lg shadow-glow-lg hover:shadow-glow-lg/80 transition-all duration-300 hover:scale-105"
         >
           Start Practice Session
           <ArrowRight className="w-5 h-5" />
@@ -43,21 +43,21 @@ export default function Home() {
             title: "Upload Resume",
             description: "Extract skills and keywords to personalize your practice questions",
             href: "/resume",
-            color: "from-blue-400 to-cyan-500",
+            color: "from-purple-500 to-violet-600",
           },
           {
             icon: Video,
             title: "Mock Interview",
             description: "Real-time face tracking and coaching feedback during practice",
             href: "/interview",
-            color: "from-cyan-400 to-sky-500",
+            color: "from-violet-500 to-purple-600",
           },
           {
             icon: BarChart3,
             title: "Review Sessions",
             description: "Analyze your performance with detailed metrics and AI insights",
             href: "/review",
-            color: "from-sky-400 to-blue-500",
+            color: "from-purple-600 to-violet-700",
           },
         ].map((feature, idx) => (
           <motion.div
@@ -73,10 +73,10 @@ export default function Home() {
               <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${feature.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-glow`}>
                 <feature.icon className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-ink group-hover:text-sky-600 transition-colors">
+              <h3 className="text-2xl font-bold mb-4 text-foreground group-hover:text-purple-400 transition-colors">
                 {feature.title}
               </h3>
-              <p className="text-ink/70 leading-relaxed">{feature.description}</p>
+              <p className="text-foreground/70 leading-relaxed">{feature.description}</p>
             </Link>
           </motion.div>
         ))}

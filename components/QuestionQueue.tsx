@@ -60,7 +60,7 @@ export function QuestionQueue({ role, onQuestionSelect }: QuestionQueueProps) {
 
   return (
     <div className="glass-effect rounded-2xl p-6 h-full">
-      <h3 className="text-xl font-bold mb-4 text-ink">Interview Questions</h3>
+      <h3 className="text-xl font-bold mb-4 text-foreground">Interview Questions</h3>
       <div className="space-y-3 max-h-[500px] overflow-y-auto">
         <AnimatePresence mode="wait">
           {questions.map((question, index) => {
@@ -76,8 +76,8 @@ export function QuestionQueue({ role, onQuestionSelect }: QuestionQueueProps) {
                 onClick={() => handleQuestionClick(index)}
                 className={`p-4 rounded-lg cursor-pointer transition-all duration-300 ${
                   isCurrent
-                    ? "bg-gradient-to-r from-sky-400/30 to-blue-400/30 shadow-glow border-2 border-sky-400"
-                    : "bg-white/50 hover:bg-white/70 border-2 border-transparent"
+                    ? "bg-gradient-to-r from-purple-500/30 to-violet-500/30 shadow-glow border-2 border-purple-500"
+                    : "bg-white/5 hover:bg-white/10 border-2 border-transparent"
                 }`}
               >
                 <div className="flex items-start gap-3">
@@ -89,16 +89,16 @@ export function QuestionQueue({ role, onQuestionSelect }: QuestionQueueProps) {
                     className="mt-1 flex-shrink-0"
                   >
                     {isAnswered ? (
-                      <CheckCircle2 className="w-5 h-5 text-green-500" />
+                      <CheckCircle2 className="w-5 h-5 text-purple-500" />
                     ) : (
-                      <Circle className="w-5 h-5 text-ink/40" />
+                      <Circle className="w-5 h-5 text-foreground/40" />
                     )}
                   </button>
                   <div className="flex-1">
-                    <div className="text-sm font-semibold text-ink/60 mb-1">
+                    <div className="text-sm font-semibold text-foreground/60 mb-1">
                       Question {index + 1}
                     </div>
-                    <div className="text-ink font-medium">{question}</div>
+                    <div className="text-foreground font-medium">{question}</div>
                   </div>
                 </div>
               </motion.div>

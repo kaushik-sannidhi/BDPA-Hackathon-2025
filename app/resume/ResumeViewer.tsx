@@ -19,7 +19,7 @@ class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { has
   render() {
     if (this.state.hasError) {
       return (
-        <div className="bg-red-50 border-l-4 border-red-400 p-4">
+        <div className="bg-red-900/30 border-l-4 border-red-500 p-4">
           <div className="flex">
             <div className="flex-shrink-0">
               <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
@@ -27,7 +27,7 @@ class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { has
               </svg>
             </div>
             <div className="ml-3">
-              <p className="text-sm text-red-700">
+              <p className="text-sm text-red-400">
                 Something went wrong while loading the PDF. Please try uploading again.
               </p>
             </div>
@@ -76,39 +76,39 @@ export default function ResumeViewer() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Resume Upload</h1>
-          <p className="text-gray-600">Upload your resume to get personalized interview preparation</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">Resume Upload</h1>
+          <p className="text-foreground/70">Upload your resume to get personalized interview preparation</p>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-md">
+        <div className="glass-effect p-6 rounded-lg shadow-md">
           <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-foreground mb-2">
               Upload Resume (PDF only, max 5MB)
             </label>
             <input
               type="file"
               accept=".pdf"
-              className="block w-full text-sm text-gray-500
+              className="block w-full text-sm text-foreground/70
                 file:mr-4 file:py-2 file:px-4
                 file:rounded-md file:border-0
                 file:text-sm file:font-semibold
-                file:bg-blue-50 file:text-blue-700
-                hover:file:bg-blue-100"
+                file:bg-purple-500/20 file:text-purple-400
+                hover:file:bg-purple-500/30"
               onChange={handleFileChange}
               disabled={isLoading}
             />
-            {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+            {error && <p className="mt-2 text-sm text-red-400">{error}</p>}
           </div>
 
           <ErrorBoundary>
-            <div className="border-2 border-dashed border-gray-200 rounded-lg p-4">
+            <div className="border-2 border-dashed border-purple-800/30 rounded-lg p-4">
               {isLoading ? (
                 <div className="flex flex-col items-center justify-center py-12">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mb-4"></div>
-                  <p className="text-gray-600">Loading your resume...</p>
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mb-4"></div>
+                  <p className="text-foreground/70">Loading your resume...</p>
                 </div>
               ) : file ? (
                 <Document
@@ -117,7 +117,7 @@ export default function ResumeViewer() {
                   onLoadError={handleLoadError}
                   loading={
                     <div className="flex justify-center py-8">
-                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500"></div>
                     </div>
                   }
                 >
@@ -130,7 +130,7 @@ export default function ResumeViewer() {
                         renderAnnotationLayer={false}
                         loading={
                           <div className="flex justify-center py-8">
-                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500"></div>
                           </div>
                         }
                       />
@@ -140,7 +140,7 @@ export default function ResumeViewer() {
               ) : (
                 <div className="text-center py-12">
                   <svg
-                    className="mx-auto h-12 w-12 text-gray-400"
+                    className="mx-auto h-12 w-12 text-foreground/40"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -153,8 +153,8 @@ export default function ResumeViewer() {
                       d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                     />
                   </svg>
-                  <h3 className="mt-2 text-sm font-medium text-gray-900">No resume uploaded</h3>
-                  <p className="mt-1 text-sm text-gray-500">Upload a PDF file to preview it here.</p>
+                  <h3 className="mt-2 text-sm font-medium text-foreground">No resume uploaded</h3>
+                  <p className="mt-1 text-sm text-foreground/60">Upload a PDF file to preview it here.</p>
                 </div>
               )}
             </div>

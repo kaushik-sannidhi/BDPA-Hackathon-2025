@@ -72,15 +72,15 @@ export default function InterviewPage() {
         animate={{ opacity: 1, y: 0 }}
         className="mb-8"
       >
-        <h1 className="text-4xl font-bold mb-2 text-ink">Mock Interview</h1>
-        <p className="text-ink/70">Practice your interview skills with real-time AI coaching</p>
+        <h1 className="text-4xl font-bold mb-2 text-foreground">Mock Interview</h1>
+        <p className="text-foreground/70">Practice your interview skills with real-time AI coaching</p>
       </motion.div>
 
       <div className="flex gap-4 mb-6">
         <button
           onClick={handleStart}
           disabled={interviewState === "live" || interviewState === "prepping"}
-          className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-400 to-emerald-500 text-white rounded-lg font-semibold shadow-glow hover:shadow-glow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-violet-600 text-white rounded-lg font-semibold shadow-glow hover:shadow-glow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {interviewState === "prepping" ? (
             <>
@@ -116,10 +116,10 @@ export default function InterviewPage() {
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mt-4 glass-effect rounded-xl p-4 border-2 border-sky-400"
+              className="mt-4 glass-effect rounded-xl p-4 border-2 border-purple-500"
             >
-              <div className="text-sm font-semibold text-ink/60 mb-2">Current Question:</div>
-              <div className="text-ink font-medium">{selectedQuestion}</div>
+              <div className="text-sm font-semibold text-foreground/60 mb-2">Current Question:</div>
+              <div className="text-foreground font-medium">{selectedQuestion}</div>
             </motion.div>
           )}
         </div>

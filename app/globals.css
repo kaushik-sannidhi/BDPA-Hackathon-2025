@@ -4,23 +4,23 @@
 
 @layer base {
   :root {
-    --background: 220 20% 95%;
-    --foreground: 240 10% 3.9%;
-    --primary: 195 100% 70%;
-    --primary-foreground: 240 10% 3.9%;
-    --secondary: 195 50% 85%;
-    --secondary-foreground: 240 10% 3.9%;
-    --accent: 195 80% 75%;
-    --accent-foreground: 240 10% 3.9%;
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+    --primary: 270 91% 65%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 270 50% 20%;
+    --secondary-foreground: 210 40% 98%;
+    --accent: 270 83% 75%;
+    --accent-foreground: 210 40% 98%;
   }
 }
 
 @layer base {
   * {
-    @apply border-sky-200;
+    @apply border-purple-800/30;
   }
   body {
-    @apply bg-gradient-to-br from-sky-50 via-blue-50 to-cyan-50 text-ink min-h-screen;
+    @apply bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-foreground min-h-screen;
     background-attachment: fixed;
   }
 }
@@ -31,14 +31,14 @@
   }
   
   .glow-text {
-    text-shadow: 0 0 10px rgba(135, 206, 235, 0.5),
-                 0 0 20px rgba(135, 206, 235, 0.3);
+    text-shadow: 0 0 10px rgba(168, 85, 247, 0.5),
+                 0 0 20px rgba(168, 85, 247, 0.3);
   }
   
   .glass-effect {
-    background: rgba(255, 255, 255, 0.7);
+    background: rgba(15, 23, 42, 0.7);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(135, 206, 235, 0.3);
+    border: 1px solid rgba(168, 85, 247, 0.3);
   }
 }
 

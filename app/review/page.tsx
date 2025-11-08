@@ -78,11 +78,11 @@ export default function ReviewPage() {
           animate={{ opacity: 1, y: 0 }}
           className="glass-effect rounded-2xl p-12 max-w-md mx-auto"
         >
-          <h2 className="text-2xl font-bold mb-4 text-ink">No Sessions Yet</h2>
-          <p className="text-ink/70 mb-6">Complete an interview practice session to see your review here.</p>
+          <h2 className="text-2xl font-bold mb-4 text-foreground">No Sessions Yet</h2>
+          <p className="text-foreground/70 mb-6">Complete an interview practice session to see your review here.</p>
           <button
             onClick={() => router.push("/interview")}
-            className="px-6 py-3 bg-gradient-to-r from-sky-400 to-blue-500 text-white rounded-lg font-semibold shadow-glow hover:shadow-glow-lg transition-all duration-300"
+            className="px-6 py-3 bg-gradient-to-r from-purple-500 to-violet-600 text-white rounded-lg font-semibold shadow-glow hover:shadow-glow-lg transition-all duration-300"
           >
             Start Practice Session
           </button>
@@ -101,12 +101,12 @@ export default function ReviewPage() {
         className="mb-8 flex items-center justify-between"
       >
         <div>
-          <h1 className="text-4xl font-bold mb-2 text-ink">Session Review</h1>
-          <p className="text-ink/70">Analyze your performance and get personalized feedback</p>
+          <h1 className="text-4xl font-bold mb-2 text-foreground">Session Review</h1>
+          <p className="text-foreground/70">Analyze your performance and get personalized feedback</p>
         </div>
         <button
           onClick={handleDeleteAll}
-          className="flex items-center gap-2 px-4 py-2 bg-red-100 text-red-600 rounded-lg font-medium hover:bg-red-200 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-red-900/30 text-red-400 rounded-lg font-medium hover:bg-red-900/50 transition-colors border border-red-800/50"
         >
           <Trash2 className="w-4 h-4" />
           Delete All Data
@@ -123,24 +123,24 @@ export default function ReviewPage() {
             transition={{ delay: 0.2 }}
             className="mt-8 glass-effect rounded-2xl p-8"
           >
-            <h2 className="text-2xl font-bold mb-6 text-ink flex items-center gap-3">
-              <Lightbulb className="w-6 h-6 text-sky-500" />
+            <h2 className="text-2xl font-bold mb-6 text-foreground flex items-center gap-3">
+              <Lightbulb className="w-6 h-6 text-purple-500" />
               AI Coaching Feedback
             </h2>
 
             {loading ? (
-              <div className="text-center py-8 text-ink/70">Generating feedback...</div>
+              <div className="text-center py-8 text-foreground/70">Generating feedback...</div>
             ) : feedback ? (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-lg font-semibold mb-3 text-ink flex items-center gap-2">
-                    <CheckCircle2 className="w-5 h-5 text-green-500" />
+                  <h3 className="text-lg font-semibold mb-3 text-foreground flex items-center gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-purple-500" />
                     Performance Summary
                   </h3>
                   <ul className="space-y-2">
                     {feedback.bullets.map((bullet, idx) => (
-                      <li key={idx} className="text-ink/80 flex items-start gap-2">
-                        <span className="text-sky-500 mt-1">•</span>
+                      <li key={idx} className="text-foreground/80 flex items-start gap-2">
+                        <span className="text-purple-500 mt-1">•</span>
                         <span>{bullet}</span>
                       </li>
                     ))}
@@ -148,8 +148,8 @@ export default function ReviewPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-semibold mb-3 text-ink flex items-center gap-2">
-                    <Target className="w-5 h-5 text-blue-500" />
+                  <h3 className="text-lg font-semibold mb-3 text-foreground flex items-center gap-2">
+                    <Target className="w-5 h-5 text-purple-500" />
                     Actionable Tips
                   </h3>
                   <div className="grid md:grid-cols-3 gap-4">
@@ -159,17 +159,17 @@ export default function ReviewPage() {
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: 0.3 + idx * 0.1 }}
-                        className="p-4 bg-gradient-to-br from-sky-50 to-blue-50 rounded-lg border border-sky-200"
+                        className="p-4 bg-gradient-to-br from-purple-900/30 to-violet-900/30 rounded-lg border border-purple-800/50"
                       >
-                        <div className="text-sm font-semibold text-sky-600 mb-1">Tip {idx + 1}</div>
-                        <div className="text-ink">{tip}</div>
+                        <div className="text-sm font-semibold text-purple-400 mb-1">Tip {idx + 1}</div>
+                        <div className="text-foreground">{tip}</div>
                       </motion.div>
                     ))}
                   </div>
                 </div>
               </div>
             ) : (
-              <div className="text-center py-8 text-ink/70">No feedback available</div>
+              <div className="text-center py-8 text-foreground/70">No feedback available</div>
             )}
           </motion.div>
         </>
@@ -182,7 +182,7 @@ export default function ReviewPage() {
           transition={{ delay: 0.3 }}
           className="mt-8 glass-effect rounded-2xl p-6"
         >
-          <h3 className="text-lg font-bold mb-4 text-ink">Previous Sessions</h3>
+          <h3 className="text-lg font-bold mb-4 text-foreground">Previous Sessions</h3>
           <div className="space-y-2">
             {sessions.slice(0, 5).map((session) => (
               <button
@@ -193,18 +193,18 @@ export default function ReviewPage() {
                 }}
                 className={`w-full text-left p-4 rounded-lg transition-all ${
                   selectedSession?.id === session.id
-                    ? "bg-sky-400/30 border-2 border-sky-400"
-                    : "bg-white/50 hover:bg-white/70 border-2 border-transparent"
+                    ? "bg-purple-500/30 border-2 border-purple-500"
+                    : "bg-white/5 hover:bg-white/10 border-2 border-transparent"
                 }`}
               >
                 <div className="flex justify-between items-center">
                   <div>
-                    <div className="font-semibold text-ink">{session.role}</div>
-                    <div className="text-sm text-ink/70">
+                    <div className="font-semibold text-foreground">{session.role}</div>
+                    <div className="text-sm text-foreground/70">
                       {new Date(session.startTime).toLocaleString()}
                     </div>
                   </div>
-                  <div className="text-sm text-ink/70">
+                  <div className="text-sm text-foreground/70">
                     {Math.floor(session.duration / 1000 / 60)}m
                   </div>
                 </div>
