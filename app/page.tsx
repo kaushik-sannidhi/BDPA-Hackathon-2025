@@ -83,9 +83,8 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0, x: 0 }}
               transition={{ duration: 0.75, ease: "easeOut" }}
               viewport={{ once: true, amount: 0.4 }}
-              className={`relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br ${feature.gradient} p-8 md:p-12`}
+              className="relative overflow-hidden rounded-3xl border border-gray-200 dark:border-white/10 bg-white dark:bg-slate-800 p-8 md:p-12"
             >
-              <div className="pointer-events-none absolute inset-0 opacity-40 blur-3xl" />
               <Link
                 href={feature.href}
                 className="group relative grid items-center gap-10 md:grid-cols-2"
@@ -101,13 +100,8 @@ export default function Home() {
                       : "md:order-1 md:justify-start"
                   }`}
                 >
-                  <div className="relative">
-                    <div
-                      className={`absolute -inset-8 rounded-full bg-gradient-to-br ${feature.accent} opacity-55 blur-3xl transition duration-500 group-hover:opacity-80`}
-                    />
-                  <div className="relative flex h-48 w-48 items-center justify-center rounded-[36px] border border-purple-200/40 bg-gradient-to-br from-purple-50 via-white to-purple-100/80 text-purple-700 shadow-[0_25px_60px_rgba(168,85,247,0.18)] backdrop-blur-2xl transition duration-500 group-hover:shadow-[0_30px_70px_rgba(168,85,247,0.35)] dark:border-white/20 dark:bg-slate-900/55 dark:text-white dark:shadow-[0_25px_60px_rgba(124,58,237,0.35)] dark:group-hover:shadow-[0_35px_85px_rgba(139,92,246,0.45)]">
-                      <feature.icon className="h-20 w-20" />
-                    </div>
+                  <div className="relative flex h-48 w-48 items-center justify-center rounded-[36px] border border-gray-200 bg-white text-purple-700 shadow-sm transition duration-300 hover:shadow-md dark:border-white/20 dark:bg-slate-700 dark:text-white">
+                    <feature.icon className="h-20 w-20" />
                   </div>
                 </motion.div>
 
@@ -119,18 +113,18 @@ export default function Home() {
                   <span className="inline-flex items-center gap-2 rounded-full border border-purple-200/60 bg-purple-100/40 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-purple-800/80 dark:border-white/20 dark:bg-white/10 dark:text-white/70">
                     {index + 1 < 10 ? `0${index + 1}` : index + 1} — Premium Feature
                   </span>
-                  <h2 className="mt-6 font-heading text-4xl font-semibold text-white drop-shadow-[0_5px_35px_rgba(147,51,234,0.35)] transition-colors duration-500 group-hover:text-purple-100">
+                  <h2 className="mt-6 font-heading text-4xl font-semibold text-slate-800 transition-colors duration-300 group-hover:text-purple-700 dark:text-white">
                     {feature.title}
                   </h2>
                   <p className="mt-4 text-lg leading-relaxed text-slate-700 dark:text-white/75">
                     {feature.description}
                   </p>
 
-                  <div className="mt-8 inline-flex items-center gap-3 text-purple-200/80 transition-all duration-300 group-hover:text-purple-100">
+                  <div className="mt-8 inline-flex items-center gap-3 text-purple-600 transition-all duration-300 group-hover:text-purple-700 dark:text-purple-200/80 dark:group-hover:text-purple-100">
                     <span className="text-sm font-semibold uppercase tracking-[0.3em]">
                       Explore
                     </span>
-                    <span className="flex h-9 w-9 items-center justify-center rounded-full border border-purple-200/40 bg-white/10 transition-all duration-500 group-hover:translate-x-2 group-hover:border-purple-200/80 group-hover:bg-white/20 dark:border-purple-200/20 dark:bg-white/5 dark:group-hover:border-purple-200/60">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full border border-purple-300 bg-white transition-all duration-500 group-hover:translate-x-2 group-hover:border-purple-400 group-hover:bg-purple-50 dark:border-purple-200/20 dark:bg-white/5 dark:group-hover:border-purple-200/60">
                       <ArrowRight className="h-4 w-4" />
                     </span>
                   </div>
