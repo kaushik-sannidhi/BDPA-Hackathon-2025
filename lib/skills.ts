@@ -1,6 +1,6 @@
 // Comprehensive skill grouping for accurate, hard-coded matching
 export const SKILL_GROUPS: { [canonical: string]: string[] } = {
-  // Programming Languages
+  // Programming Languages & Fundamentals
   "JavaScript": ["javascript", "js", "es6", "ecmascript"],
   "TypeScript": ["typescript", "ts"],
   "Python": ["python", "python3", "py"],
@@ -15,6 +15,9 @@ export const SKILL_GROUPS: { [canonical: string]: string[] } = {
   "Kotlin": ["kotlin"],
   "HTML": ["html", "html5"],
   "CSS": ["css", "css3", "scss", "sass", "less"],
+  "Data Structures": ["data structures", "algorithms and data structures"],
+  "Algorithms": ["algorithms", "algorithm design", "algorithm analysis"],
+  "Scripting": ["scripting", "shell scripting", "bash scripting"],
 
   // Frontend Frameworks & Libraries
   "React": ["react", "react.js", "reactjs"],
@@ -28,6 +31,11 @@ export const SKILL_GROUPS: { [canonical: string]: string[] } = {
   "Tailwind CSS": ["tailwind css", "tailwind"],
   "Bootstrap": ["bootstrap"],
   "Material-UI": ["material-ui", "mui"],
+  "Figma": ["figma", "ui/ux design"],
+  "Sketch": ["sketch", "ui/ux design"],
+  "Prototyping": ["prototyping", "wireframing", "mockups"],
+  "Visual Design": ["visual design", "graphic design", "ui design"],
+  "Interaction Design": ["interaction design", "ixd", "user experience design"],
 
   // Backend Frameworks & Libraries
   "Node.js": ["node.js", "nodejs"],
@@ -56,28 +64,35 @@ export const SKILL_GROUPS: { [canonical: string]: string[] } = {
   "AWS": ["aws", "amazon web services"],
   "Azure": ["azure", "microsoft azure"],
   "Google Cloud": ["gcp", "google cloud platform"],
-  "Docker": ["docker"],
-  "Kubernetes": ["kubernetes", "k8s"],
-  "Terraform": ["terraform"],
-  "Ansible": ["ansible"],
+  "Docker": ["docker", "containerization"],
+  "Kubernetes": ["kubernetes", "k8s", "container orchestration"],
+  "Terraform": ["terraform", "infrastructure as code"],
+  "Ansible": ["ansible", "configuration management"],
   "CI/CD": ["ci/cd", "continuous integration", "continuous delivery", "jenkins", "circleci", "travis ci", "github actions"],
   "Version Control": ["version control", "git", "github", "gitlab", "bitbucket", "vcs"],
-  "Linux": ["linux", "unix", "ubuntu", "centos"],
-  "Nginx": ["nginx"],
-  "Apache": ["apache"],
-  
+  "Linux/Unix": ["linux", "unix", "ubuntu", "centos", "linux administration"],
+  "Nginx": ["nginx", "web server"],
+  "Apache": ["apache", "http server"],
+  "Network Security": ["network security", "cybersecurity", "network defense"],
+  "Penetration Testing": ["penetration testing", "pentesting", "ethical hacking"],
+  "Security Frameworks": ["security frameworks", "nist", "iso 27001", "cybersecurity framework"],
+  "Incident Response": ["incident response", "security incidents", "cyber incident response"],
+  "Cryptography": ["cryptography", "encryption", "cryptographic protocols"],
+
   // Data Science & ML
   "Machine Learning": ["machine learning", "ml"],
   "Deep Learning": ["deep learning", "neural networks"],
   "TensorFlow": ["tensorflow", "tf"],
   "PyTorch": ["pytorch"],
   "Scikit-learn": ["scikit-learn", "sklearn"],
-  "Pandas": ["pandas"],
-  "NumPy": ["numpy"],
+  "Pandas": ["pandas", "data manipulation"],
+  "NumPy": ["numpy", "numerical computing"],
   "Jupyter": ["jupyter", "jupyter notebooks"],
   "Natural Language Processing": ["nlp", "natural language processing"],
   "Computer Vision": ["computer vision", "cv"],
-  
+  "Statistics": ["statistics", "statistical analysis", "probability"],
+  "Data Visualization": ["data visualization", "data viz", "charts", "graphs"],
+
   // APIs & Communication
   "REST": ["rest", "restful apis", "rest apis"],
   "GraphQL": ["graphql"],
@@ -93,11 +108,14 @@ export const SKILL_GROUPS: { [canonical: string]: string[] } = {
   "Integration Testing": ["integration testing"],
 
   // Soft Skills & Methodologies
-  "Agile": ["agile", "scrum", "kanban"],
-  "Communication": ["communication"],
-  "Problem Solving": ["problem solving"],
-  "Teamwork": ["teamwork", "collaboration"],
-  "Leadership": ["leadership"],
+  "Agile/Scrum": ["agile", "scrum", "kanban", "agile methodology"],
+  "Communication": ["communication", "written communication", "verbal communication"],
+  "Problem Solving": ["problem solving", "analytical thinking", "critical thinking"],
+  "Teamwork": ["teamwork", "collaboration", "team player"],
+  "Leadership": ["leadership", "team leadership", "project leadership"],
+  "Product Strategy": ["product strategy", "product management", "product roadmap"],
+  "User Research": ["user research", "user interviews", "usability testing"],
+  "Software Architecture": ["software architecture", "system design", "architecture patterns"],
 };
 
 // Create a reverse map for quick lookups
