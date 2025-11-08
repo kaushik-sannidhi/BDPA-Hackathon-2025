@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { Dashboard } from "@/components/Dashboard";
-import { CareerPathways } from "@/components/CareerPathways";
 import { JobPostingAnalyzer } from "@/components/JobPostingAnalyzer";
 import { MarketInsights } from "@/components/MarketInsights";
 import { StudyPlanGenerator } from "@/components/StudyPlanGenerator";
@@ -111,20 +110,25 @@ export default function ResourcesPage() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
-            <TabsTrigger value="dashboard" className="flex items-center gap-2">
+          <TabsList className="flex w-full bg-muted p-1 rounded-lg">
+            <TabsTrigger 
+              value="dashboard" 
+              className="flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-md transition-colors"
+            >
               <BarChart3 className="w-4 h-4" />
               Dashboard
             </TabsTrigger>
-            <TabsTrigger value="career" className="flex items-center gap-2">
-              <TrendingUp className="w-4 h-4" />
-              Career Pathways
-            </TabsTrigger>
-            <TabsTrigger value="learning" className="flex items-center gap-2">
+            <TabsTrigger 
+              value="learning" 
+              className="flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-md transition-colors"
+            >
               <BookOpen className="w-4 h-4" />
               Learning
             </TabsTrigger>
-            <TabsTrigger value="jobs" className="flex items-center gap-2">
+            <TabsTrigger 
+              value="jobs" 
+              className="flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-md transition-colors"
+            >
               <Briefcase className="w-4 h-4" />
               Job Analyzer
             </TabsTrigger>
@@ -154,27 +158,7 @@ export default function ResourcesPage() {
             )}
           </TabsContent>
 
-          <TabsContent value="career" className="space-y-6">
-            {userSkills.length > 0 ? (
-              <CareerPathways currentSkills={userSkills} />
-            ) : (
-              <Card>
-                <CardHeader>
-                  <CardTitle>No Skills Added</CardTitle>
-                  <CardDescription>
-                    Add your skills in your profile to see career pathway recommendations
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button onClick={() => router.push("/profile")}>
-                    Go to Profile
-                  </Button>
-                </CardContent>
-              </Card>
-            )}
-          </TabsContent>
-
-          <TabsContent value="learning" className="space-y-6">
+<TabsContent value="learning" className="space-y-6">
             {selectedRole && roleRequirements ? (
               <>
                 <GapAnalysis
