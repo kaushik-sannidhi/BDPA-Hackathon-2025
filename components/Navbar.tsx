@@ -22,7 +22,7 @@ export function Navbar() {
           <Link href="/" className="flex items-center gap-2 group">
             <Sparkles className="w-6 h-6 text-sky-500 group-hover:animate-spin transition-transform" />
             <span className="text-xl font-bold bg-gradient-to-r from-ink to-sky-600 bg-clip-text text-transparent glow-text">
-              Resume Coach
+              ApplAI
             </span>
           </Link>
           <div className="flex items-center gap-6">

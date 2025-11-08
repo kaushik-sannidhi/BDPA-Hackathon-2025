@@ -80,7 +80,7 @@ export default function ResumeViewer() {
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Resume Upload</h1>
-          <p className="text-gray-600">Upload your resume in PDF format to get started</p>
+          <p className="text-gray-600">Upload your resume to get personalized interview preparation</p>
         </div>
 
         <div className="bg-white p-6 rounded-lg shadow-md">

@@ -21,11 +21,11 @@ export default function Home() {
           <Sparkles className="w-20 h-20 text-sky-500 mx-auto animate-glow-pulse" />
         </motion.div>
         <h1 className="text-6xl font-bold mb-6 bg-gradient-to-r from-ink via-sky-600 to-ink bg-clip-text text-transparent glow-text">
-          Resume Coach
+          ApplAI
         </h1>
         <p className="text-xl text-ink/80 max-w-2xl mx-auto mb-8">
           Master your interview skills with AI-powered real-time coaching. Practice makes perfect,
-          and we&apos;re here to help you shine.
+          and we&apos;re here to help you apply.
         </p>
         <Link
           href="/interview"
@@ -81,29 +81,6 @@ export default function Home() {
           </motion.div>
         ))}
       </div>
-
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.5 }}
-        className="mt-20 glass-effect rounded-2xl p-8 max-w-3xl mx-auto"
-      >
-        <h2 className="text-3xl font-bold mb-4 text-center text-ink">How It Works</h2>
-        <div className="space-y-4 text-ink/80">
-          <p className="text-lg">
-            <strong className="text-sky-600">Privacy First:</strong> All video processing happens
-            in your browser. No video is ever uploaded to our servers.
-          </p>
-          <p className="text-lg">
-            <strong className="text-sky-600">Real-Time Feedback:</strong> Get instant coaching on
-            eye contact, posture, speaking pace, and more.
-          </p>
-          <p className="text-lg">
-            <strong className="text-sky-600">AI-Powered Insights:</strong> Receive personalized
-            tips based on your performance and selected role.
-          </p>
-        </div>
-      </motion.div>
     </div>
   );
 }

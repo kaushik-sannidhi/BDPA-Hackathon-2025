@@ -6,7 +6,7 @@ import { Navbar } from "@/components/Navbar";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Resume Coach - AI-Powered Interview Practice",
+  title: "ApplAI",
   description: "Practice your interview skills with real-time AI coaching and feedback",
 };
 
@@ -16,10 +16,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="en" className="overflow-hidden h-full">
+      <body className={`${inter.className} overflow-hidden h-full`}>
         <Navbar />
-        <main className="min-h-screen">{children}</main>
+        <main className="h-screen overflow-auto">{children}</main>
       </body>
     </html>
   );

@@ -1,6 +1,6 @@
-# Resume Coach 🎯
+# ApplAI - AI-Powered Interview Coach 🤖🎤
 
-A hackathon-ready Next.js 15 application for AI-powered interview practice with real-time face tracking and coaching feedback.
+A cutting-edge Next.js 15 application that helps you ace your interviews with AI-powered practice sessions, real-time feedback, and performance analytics.
 
 ## Features
 
