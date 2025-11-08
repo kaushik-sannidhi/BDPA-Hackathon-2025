@@ -155,13 +155,13 @@ export function CareerPathways({
             {/* Skills Match Section */}
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <h4 className="font-semibold mb-2 flex items-center gap-2 text-green-600">
+                <h4 className="font-semibold mb-2 flex items-center gap-2 text-yellow-600">
                   <CheckCircle2 className="h-4 w-4" />
                   Your Matching Skills ({match.matchedSkills.length})
                 </h4>
                 <div className="flex flex-wrap gap-2">
                   {match.matchedSkills.map((skill: string, skillIdx: number) => (
-                    <Badge key={skillIdx} variant="default" className="bg-green-100 text-green-800 hover:bg-green-200">
+                    <Badge key={skillIdx} variant="default" className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200">
                       {skill}
                     </Badge>
                   ))}
@@ -169,18 +169,18 @@ export function CareerPathways({
               </div>
               {match.missingSkills.length > 0 && (
                 <div>
-                  <h4 className="font-semibold mb-2 flex items-center gap-2 text-orange-600">
+                  <h4 className="font-semibold mb-2 flex items-center gap-2 text-amber-600">
                     <AlertCircle className="h-4 w-4" />
                     Skills to Learn ({match.missingSkills.length})
                   </h4>
                   <div className="flex flex-wrap gap-2">
                     {match.missingSkills.slice(0, 5).map((skill: string, skillIdx: number) => (
-                      <Badge key={skillIdx} variant="outline" className="border-orange-300 text-orange-700">
+                      <Badge key={skillIdx} variant="outline" className="border-amber-300 text-amber-700">
                         {skill}
                       </Badge>
                     ))}
                     {match.missingSkills.length > 5 && (
-                      <Badge variant="outline" className="border-orange-300 text-orange-700">
+                      <Badge variant="outline" className="border-amber-300 text-amber-700">
                         +{match.missingSkills.length - 5} more
                       </Badge>
                     )}
