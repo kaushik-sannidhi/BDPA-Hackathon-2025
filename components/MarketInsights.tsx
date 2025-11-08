@@ -64,21 +64,9 @@ export function MarketInsights({ role }: MarketInsightsProps) {
     );
   }
 
-  // Initialize with default values if insights is null
-  const defaultSalaryRanges = { 
-    entry: 'N/A', 
-    mid: 'N/A', 
-    senior: 'N/A' 
-  };
-  
-  const safeInsights = {
-    inDemandSkills: insights?.inDemandSkills || [],
-    emergingTechnologies: insights?.emergingTechnologies || [],
-    salaryRanges: insights?.salaryRanges || defaultSalaryRanges,
-    geographicDemand: insights?.geographicDemand || 'N/A',
-    remoteWorkAvailability: insights?.remoteWorkAvailability || 'N/A',
-    growthRate: insights?.growthRate || 'N/A'
-  };
+  if (!insights) {
+    return null;
+  }
 
   return (
     <div className="space-y-6">
@@ -97,7 +85,7 @@ export function MarketInsights({ role }: MarketInsightsProps) {
               Top In-Demand Skills
             </h3>
             <div className="flex flex-wrap gap-2">
-              {safeInsights.inDemandSkills?.map((skill, idx) => (
+              {(insights.inDemandSkills ?? []).map((skill, idx) => (
                 <Badge key={idx} variant="default">
                   {skill}
                 </Badge>
@@ -108,7 +96,7 @@ export function MarketInsights({ role }: MarketInsightsProps) {
           <div>
             <h3 className="font-semibold mb-3">Emerging Technologies</h3>
             <div className="flex flex-wrap gap-2">
-              {safeInsights.emergingTechnologies?.map((tech, idx) => (
+              {(insights.emergingTechnologies ?? []).map((tech, idx) => (
                 <Badge key={idx} variant="outline">
                   {tech}
                 </Badge>
@@ -120,35 +108,34 @@ export function MarketInsights({ role }: MarketInsightsProps) {
             <div className="flex items-start gap-2">
               <DollarSign className="h-5 w-5 text-muted-foreground mt-0.5" />
               <div>
-                <div className="font-medium">Entry Level</div>
-                <div className="text-xl font-bold">{safeInsights.salaryRanges.entry}</div>
-                <p className="text-xs text-muted-foreground">Mid: {safeInsights.salaryRanges.mid}</p>
-                <p className="text-xs text-muted-foreground">Senior: {safeInsights.salaryRanges.senior}</p>
+                <p className="text-sm font-medium">Salary Ranges</p>
+                <p className="text-xs text-muted-foreground">Entry: {insights.salaryRanges?.entry ?? "N/A"}</p>
+                <p className="text-xs text-muted-foreground">Mid: {insights.salaryRanges?.mid ?? "N/A"}</p>
+                <p className="text-xs text-muted-foreground">Senior: {insights.salaryRanges?.senior ?? "N/A"}</p>
               </div>
             </div>
             <div className="flex items-start gap-2">
               <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
               <div>
                 <p className="text-sm font-medium">Geographic Demand</p>
-                <div className="text-2xl font-bold">{safeInsights.geographicDemand}</div>
+                <p className="text-xs text-muted-foreground">{insights.geographicDemand ?? "N/A"}</p>
               </div>
             </div>
             <div className="flex items-start gap-2">
               <Laptop className="h-5 w-5 text-muted-foreground mt-0.5" />
               <div>
                 <p className="text-sm font-medium">Remote Work</p>
-                <div className="text-2xl font-bold">{safeInsights.remoteWorkAvailability}</div>
+                <p className="text-xs text-muted-foreground">{insights.remoteWorkAvailability ?? "N/A"}</p>
               </div>
             </div>
           </div>
 
           <div>
             <h3 className="font-semibold mb-2">Industry Growth Rate</h3>
-            <div className="text-2xl font-bold">{safeInsights.growthRate}</div>
+            <p className="text-sm text-muted-foreground">{insights.growthRate ?? "N/A"}</p>
           </div>
         </CardContent>
       </Card>
     </div>
   );
 }
-

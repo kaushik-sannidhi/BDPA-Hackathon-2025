@@ -9,7 +9,7 @@ import { StudyPlanGenerator } from "@/components/StudyPlanGenerator";
 
 interface DashboardProps {
   userSkills: string[];
-  requiredSkills: string[];
+  requiredSkills?: string[];
   roleName: string | null;
 }
 
