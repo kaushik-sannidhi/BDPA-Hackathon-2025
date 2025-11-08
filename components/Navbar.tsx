@@ -70,12 +70,9 @@ export function Navbar() {
   };
 
   const navLinks = [
-    { href: "/", label: "Home", icon: Home },
     { href: "/profile", label: "Profile", icon: User },
-    { href: "/dashboard", label: "Dashboard", icon: BarChart3 },
     { href: "/interview", label: "Interview", icon: Video },
     { href: "/resources", label: "Resources", icon: BookOpen },
-    { href: "/review", label: "Review", icon: FileText },
   ];
 
   // Don't show navbar on login page
