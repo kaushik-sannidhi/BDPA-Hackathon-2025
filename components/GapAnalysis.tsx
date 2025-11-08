@@ -42,7 +42,7 @@ export function GapAnalysis({
   }, [learningResources]);
 
   useEffect(() => {
-    if (requiredSkills.length === 0) return;
+    if (!requiredSkills || requiredSkills.length === 0) return;
 
     const { matched, missing, matchPercentage } = matchSkills(
       userSkills,

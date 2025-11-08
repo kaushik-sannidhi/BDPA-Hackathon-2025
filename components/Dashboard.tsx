@@ -16,7 +16,7 @@ interface DashboardProps {
 const COLORS = ["#10b981", "#f59e0b", "#ef4444"];
 
 export function Dashboard({ userSkills, requiredSkills, roleName }: DashboardProps) {
-  if (!roleName || requiredSkills.length === 0) {
+  if (!roleName || !requiredSkills || requiredSkills.length === 0) {
     return null;
   }
 
