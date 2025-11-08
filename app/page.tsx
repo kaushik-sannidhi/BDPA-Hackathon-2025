@@ -204,11 +204,11 @@ export default function Home() {
                     {feature.description}
                   </p>
 
-                  <div className="mt-8 inline-flex items-center gap-3 text-purple-600 transition-all duration-300 group-hover:text-purple-700 dark:text-purple-200/80 dark:group-hover:text-purple-100">
+                  <div className="mt-8 inline-flex items-center gap-3 text-yellow-600 transition-all duration-300 group-hover:text-yellow-700 dark:text-yellow-200/80 dark:group-hover:text-yellow-100">
                     <span className="text-sm font-semibold uppercase tracking-[0.3em]">
                       Explore
                     </span>
-                    <span className="flex h-9 w-9 items-center justify-center rounded-full border border-purple-300 bg-white transition-all duration-500 group-hover:translate-x-2 group-hover:border-purple-400 group-hover:bg-purple-50 dark:border-purple-200/20 dark:bg-white/5 dark:group-hover:border-purple-200/60">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full border border-yellow-300 bg-white transition-all duration-500 group-hover:translate-x-2 group-hover:border-yellow-400 group-hover:bg-yellow-50 dark:border-yellow-200/20 dark:bg-white/5 dark:group-hover:border-yellow-200/60">
                       <ArrowRight className="h-4 w-4" />
                     </span>
                   </div>

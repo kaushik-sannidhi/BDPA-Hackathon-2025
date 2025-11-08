@@ -12,22 +12,33 @@ export async function POST(request: NextRequest) {
     }
 
     // Build a prompt to evaluate the candidate's answer
-    const prompt = `You are a senior interviewer. Evaluate the candidate's answer to the question below.
+    const prompt = `You are an expert interview coach providing a detailed evaluation of a candidate's answer.
 
 Question: ${question}
 
-Candidate response transcript: ${transcript}
+Candidate's Answer (Transcript):
+${transcript}
 
-Provide a JSON response with the following shape:
+**Your Task:**
+Provide a comprehensive, in-depth analysis of the candidate's response. Be critical but constructive. Do not provide a minimal response; be thorough and detailed. Your feedback is crucial for the candidate's improvement.
+
+**Output Format (JSON only):**
+Return a single JSON object with the following structure. Do not include any other text or markdown.
+
 {
-  "score": number (0-100),
-  "strengths": ["..."],
-  "weaknesses": ["..."],
-  "detailedFeedback": "string - actionable guidance",
-  "nextQuestion": "string - a follow-up or next question based on the response"
+  "score": number (a score from 0 to 100, where 100 is a perfect, textbook answer),
+  "strengths": [
+    "string (A specific point about what the candidate did well. Be descriptive.)"
+  ],
+  "weaknesses": [
+    "string (A specific, constructive critique of what the candidate did wrong or missed. e.g., 'The explanation of technical trade-offs was superficial.')"
+  ],
+  "suggestions": [
+    "string (A detailed, actionable suggestion for improvement. Give a concrete example. e.g., 'To improve, you could have said: \\'I reduced latency by 30% by implementing a caching layer with Redis...\\' to show clear impact.')"
+  ],
+  "nextQuestion": "string (a relevant follow-up question based on their specific answer)"
 }
-
-Be concise and only return valid JSON.`;
+`;
 
     const result = await geminiModel.generateContent(prompt);
     const response = await result.response;

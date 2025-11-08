@@ -137,9 +137,14 @@ export function Dashboard({ userSkills, requiredSkills, roleName }: DashboardPro
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={categoryData}>
               <XAxis dataKey="category" />
-              <YAxis />
+              <YAxis 
+                tickFormatter={(value) => Math.round(value).toString()}
+                domain={[0, 5]}
+                ticks={[0, 1, 2, 3, 4, 5]}
+                tickCount={6}
+              />
               <Tooltip />
-              <Bar dataKey="matched" fill="#f59e0b" />
+              <Bar dataKey="notMatched" fill="#f59e0b" />
             </BarChart>
           </ResponsiveContainer>
         </CardContent>
