@@ -930,6 +930,8 @@ export default function ProfilePage() {
                 <ResumeUpload
                   onResumeParsed={handleResumeParsed}
                   onSkillsExtracted={handleSkillsExtracted}
+                  resumeText={resumeText}
+                  selectedRole={selectedRole}
                 />
                 {resumeText && (
                   <div className="mt-4 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">

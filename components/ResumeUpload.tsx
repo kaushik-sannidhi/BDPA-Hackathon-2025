@@ -3,30 +3,45 @@
 import { useState, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Upload, File, X, Loader2 } from "lucide-react";
+import { Upload, File, X, Loader2, Sparkles, ThumbsUp, ThumbsDown, Lightbulb } from "lucide-react";
 
 interface ResumeUploadProps {
   onResumeParsed: (text: string) => void;
   onSkillsExtracted?: (skills: string[]) => void;
+  resumeText: string;
+  selectedRole: string | null;
+}
+
+interface Analysis {
+  strengths: string[];
+  weaknesses: string[];
+  growthTips: {
+    tip: string;
+    link?: string;
+  }[];
 }
 
 export function ResumeUpload({
   onResumeParsed,
   onSkillsExtracted,
+  resumeText,
+  selectedRole,
 }: ResumeUploadProps) {
   const [file, setFile] = useState<File | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [analysis, setAnalysis] = useState<Analysis | null>(null);
   const [isDragActive, setIsDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const processFile = useCallback(async (uploadedFile: File) => {
     setFile(uploadedFile);
     setError(null);
+    setAnalysis(null);
     setIsProcessing(true);
 
     try {
-      // Use API route for server-side parsing
       const formData = new FormData();
       formData.append("file", uploadedFile);
 
@@ -42,7 +57,6 @@ export function ResumeUpload({
       const { text } = await parseResponse.json();
       onResumeParsed(text);
 
-      // Extract skills from resume
       if (onSkillsExtracted) {
         const response = await fetch("/api/extract-skills", {
           method: "POST",
@@ -63,6 +77,38 @@ export function ResumeUpload({
       setIsProcessing(false);
     }
   }, [onResumeParsed, onSkillsExtracted]);
+
+  const handleAnalyze = async () => {
+    if (!resumeText || !selectedRole) {
+      setError("Please upload a resume and select a target role first.");
+      return;
+    }
+    setIsAnalyzing(true);
+    setError(null);
+    setAnalysis(null);
+
+    try {
+      const response = await fetch("/api/resume-evaluate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ resumeText, role: selectedRole }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to analyze resume");
+      }
+
+      const data = await response.json();
+      setAnalysis(data);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Failed to analyze resume"
+      );
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -92,6 +138,8 @@ export function ResumeUpload({
   const removeFile = () => {
     setFile(null);
     setError(null);
+    setAnalysis(null);
+    onResumeParsed("");
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -162,9 +210,88 @@ export function ResumeUpload({
             )}
           </div>
 
+          {resumeText && (
+            <Button
+              onClick={handleAnalyze}
+              disabled={isAnalyzing || !selectedRole}
+              className="w-full"
+            >
+              {isAnalyzing ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Analyzing...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="mr-2 h-4 w-4" />
+                  Analyze Resume
+                </>
+              )}
+            </Button>
+          )}
+          {!selectedRole && resumeText && (
+            <p className="text-xs text-center text-amber-500">
+              Please select a target role to enable analysis.
+            </p>
+          )}
+
           {error && (
             <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
               {error}
+            </div>
+          )}
+
+          {analysis && (
+            <div className="space-y-6 pt-4">
+              <h3 className="text-xl font-semibold text-center">Resume Analysis</h3>
+              
+              {/* Strengths */}
+              <div>
+                <h4 className="font-semibold text-lg flex items-center gap-2 mb-2 text-green-500">
+                  <ThumbsUp /> Strengths
+                </h4>
+                <ul className="list-disc list-inside space-y-1 pl-2">
+                  {analysis.strengths.map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Weaknesses */}
+              <div>
+                <h4 className="font-semibold text-lg flex items-center gap-2 mb-2 text-red-500">
+                  <ThumbsDown /> Weaknesses
+                </h4>
+                <ul className="list-disc list-inside space-y-1 pl-2">
+                  {analysis.weaknesses.map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Growth Tips */}
+              <div>
+                <h4 className="font-semibold text-lg flex items-center gap-2 mb-2 text-blue-500">
+                  <Lightbulb /> Growth Tips
+                </h4>
+                <ul className="list-disc list-inside space-y-2 pl-2">
+                  {analysis.growthTips.map((item, index) => (
+                    <li key={index}>
+                      {item.tip}
+                      {item.link && (
+                        <a
+                          href={item.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="ml-2 text-primary hover:underline text-sm"
+                        >
+                          Learn more
+                        </a>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           )}
         </div>
